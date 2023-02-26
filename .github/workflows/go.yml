@@ -25,7 +25,7 @@ jobs:
     - name: Build
       run: |
         echo "Building"
-        set PATH=%PATH%;C:\Go\bin
+        #set PATH=%PATH%;C:\Go\bin
         set GOPATH=${{ github.workspace }}/go
         set CGO_ENABLED=1
         set CC=x86_64-w64-mingw32-gcc
