@@ -7,51 +7,47 @@ on:
     branches: [ "main" ]
 
 jobs:
-  cicd:
-    runs-on: ubuntu-latest
+  build-windows:
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
 
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v2
       with:
         go-version: 1.18
 
     - name: Install dependencies
       run: |
         echo "Installing dependencies"
-        sudo apt-get update -y
-        sudo apt-get install -y mingw-w64
-        sudo apt-get install -y git libx11-dev libxcursor-dev x11-xserver-utils libxrandr-dev libxinerama-dev libxi-dev libasound2-dev libgtk-3-dev libgl1-mesa-dev libglu1-mesa-dev libgtk-3-dev libxxf86vm-dev
-    
+        choco install mingw
+        choco install zip
+
     - name: Build
       run: |
         echo "Building"
         export PATH=$PATH:/usr/local/go/bin
         export GOPATH=${{ github.workspace }}/go
         export CGO_ENABLED=1
-        sudo go env -w GO111MODULE=on
-        sudo go mod download
-        sudo GOOS=windows GOARCH=amd64 go build -o ./Ikemen_GO.exe ./src
-        sudo GOOS=linux GOARCH=amd64 go build -o ./Ikemen_GO_Linux ./src
-        sudo GOOS=darwin GOARCH=amd64 go build -o ./Ikemen_GO_MacOS ./src
-  
+        export CC=x86_64-w64-mingw32-gcc
+        export CXX=x86_64-w64-mingw32-g++
+        export GOOS=windows
+        export GOARCH=amd64
+        go env -w GO111MODULE=on
+        go mod download
+        go build -o ./Ikemen_GO.exe ./src
+
     - name: Deploy
       run: |
         echo "Deploying"
         mkdir ./deploy
-        echo "Preparing repo assets"
         cp -rp data external ./deploy
-        cp ./Ikemen_GO.exe ./deploy/Ikemen_GO.exe
-        cp ./Ikemen_GO_Linux ./deploy/Ikemen_GO_Linux
-        cp ./Ikemen_GO_MacOS ./deploy/Ikemen_GO_MacOS
-        echo "Preparing screenpack assets"
+        cp ./Ikemen_GO.exe ./deploy
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
         cd ./Ikemen_GO-Elecbyte-Screenpack
         cp -rp chars data font stages ${{ github.workspace }}/deploy
-        cp -p LICENCE.txt ${{ github.workspace }}/deploy/ScreenpackLicense.txt
-        cd ${{ github.workspace }}
-        echo "Successfully prepared assets for deployment"
+        cp -p LICENCE.txt ${{ github.workspace }}/ScreenpackLicense.txt
+        echo "Succesfully prepared assets for deployment"
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
@@ -63,3 +59,4 @@ jobs:
           Release version 1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
+
