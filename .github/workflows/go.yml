@@ -16,13 +16,18 @@ jobs:
       run: echo "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"
 
     - name: Create go direcotry (windows)
-      run: mkdir ${{ github.workspace }}/go
+      run: |
+        mkdir go/pkg/mod
+        mkdir go/bin
+        mkdir ${{ github.workspace }}/go
 
     - name: Cache Go modules and dependencies (windows)
       id: cache-windows-go
       uses: actions/cache@v3
       with:
         path: |
+          go/pkg/mod
+          go/bin
           ${{ github.workspace }}/go
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
 
@@ -37,19 +42,6 @@ jobs:
         #choco install mingw
         choco install zip git
 
-    - name: Generate cache (windows)
-      if: steps.cache-windows-go.outputs.cache-hit != 'true'
-      run: |
-        echo "Generating cache (windows)"
-        set GOPATH=${{ github.workspace }}/go
-        set CGO_ENABLED=1
-        set CC=x86_64-w64-mingw32-gcc
-        set CXX=x86_64-w64-mingw32-g++
-        set GOOS=windows
-        set GOARCH=amd64
-        go env -w GO111MODULE=on
-        go mod download
-        
     - name: Build (windows)
       run: |
         echo "Building with cached dependencies (windows)"
@@ -60,6 +52,7 @@ jobs:
         set GOOS=windows
         set GOARCH=amd64
         go env -w GO111MODULE=on
+        go mod download
         go build -o ./Ikemen_GO.exe ./src
 
     - name: Deploy (windows)
