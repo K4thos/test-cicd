@@ -1,0 +1,156 @@
+#===============================================================================
+# Global states (not halted by Pause/SuperPause, no helper limitations)
+#===============================================================================
+[StateDef -4]
+
+if !const(Default.Enable.Score) || teamSide = 0 {
+	# do nothing, global code disabled locally or executed by stage
+} else if roundState = 0 {
+	map(_iksys_scoreTimeVitalFlag) := 0;
+	map(_iksys_scoreConsecutiveWinsFlag) := 0;
+	map(_iksys_scoreReceivedDamage) := 0;
+	map(_iksys_scoreComboCount) := 0;
+	map(_iksys_scoreFirstAttackFlag) := 0;
+	map(_iksys_scoreMoveCounteredFlag) := 0;
+	map(_iksys_scoreWinFlag) := 0;
+} else if roundState = 4 && !isHelper {
+	# score: time vital bonus
+	if win && map(_iksys_scoreTimeVitalFlag) = 0 && alive {
+		if teamMode = Turns && roundsExisted = 0 && enemy,roundsExisted > 0 {
+			# skip time ratio multiplier, adjust vital bonus depending on how many rounds it took turns team to beat the enemy
+			scoreAdd{value: round(float(life) / lifeMax / (numPartner + 1) * 10000 / (enemy,roundsExisted + 1), -2)}
+		} else {
+			let p1TagNum = 1;
+			let p2TagNum = 1;
+			if teamMode = Tag {
+				let p1TagNum = numPartner + 1;
+			}
+			if enemy,teamMode = Tag {
+				let p2TagNum = enemy,numPartner + 1;
+			}
+			let timeRatio = 100 * timeRemaining / (timeRemaining + timeElapsed);
+			if $p1TagNum > $p2TagNum {
+				# time ratio penalty in case of Tag adjusted FramesPerCount value and not equal team sizes
+				let timeRatio = $timeRatio * $p2TagNum / $p1TagNum;
+			}
+			let timeMul = 1;
+			if $timeRatio > 90 {
+				let timeMul = 5;
+			} else if $timeRatio > 85 {
+				let timeMul = 4;
+			} else if $timeRatio > 80 {
+				let timeMul = 2.5;
+			} else if $timeRatio > 70 {
+				let timeMul = 2;
+			} else if $timeRatio > 60 {
+				let timeMul = 1.5;
+			}
+			scoreAdd{value: round(float(life) / lifeMax / (numPartner + 1) * 10000 * $timeMul, -2)}
+			map(_iksys_scoreTimeVitalFlag) := 1;
+		}
+	}
+	# score: consecutive wins bonus
+	if playerNo = teamSide {
+		if win && matchOver && consecutiveWins > 0 && (roundNo > 1 || matchNo > 1) && map(_iksys_scoreConsecutiveWinsFlag) = 0 && !isHomeTeam && enemy,aiLevel > 0 {
+			scoreAdd{value: 30000 + (consecutiveWins - 1) * 10000}
+			map(_iksys_scoreConsecutiveWinsFlag) := 1;
+		}
+	}
+} else ignoreHitPause if roundState > 0 {
+	# score: damage bonus
+	if receivedDamage != map(_iksys_scoreReceivedDamage) {
+		if receivedDamage > 0 && getHitVar(score) = 0 && getHitVar(playerNo) != 0 && playerId(getHitVar(id)),teamSide != teamSide {
+			let dmgMul = 0;
+			switch getHitVar(attr) {
+			# normal attacks
+			case [const(AttrStandingHyperAttack), const(AttrAerialHyperAttack)]:
+				let dmgMul = 10;
+			case [const(AttrStandingSpecialAttack), const(AttrAerialSpecialAttack)]:
+				let dmgMul = 9;
+			case [const(AttrStandingNormalAttack), const(AttrAerialNormalAttack)]:
+				let dmgMul = 8;
+			# throws
+			case [const(AttrStandingHyperThrow), const(AttrAerialHyperThrow)]:
+				let dmgMul = 10;
+			case [const(AttrStandingSpecialThrow), const(AttrAerialSpecialThrow)]:
+				let dmgMul = 9;
+			case [const(AttrStandingNormalThrow), const(AttrAerialNormalThrow)]:
+				let dmgMul = 8;
+			# projectiles
+			case [const(AttrStandingHyperProjectile), const(AttrAerialHyperProjectile)]:
+				let dmgMul = 10;
+			case [const(AttrStandingSpecialProjectile), const(AttrAerialSpecialProjectile)]:
+				let dmgMul = 9;
+			case [const(AttrStandingNormalProjectile), const(AttrAerialNormalProjectile)]:
+				let dmgMul = 8;
+			}
+			if $dmgMul > 0 {
+				scoreAdd{value: round((receivedDamage - map(_iksys_scoreReceivedDamage)) * $dmgMul, -2); redirectid: getHitVar(id)}
+			}
+		}
+		map(_iksys_scoreReceivedDamage) := receivedDamage;
+	}
+	# score: first attack bonus
+	if firstAttack && map(_iksys_scoreFirstAttackFlag) = 0 {
+		scoreAdd{value: 1500}
+		map(_iksys_scoreFirstAttackFlag) := 1;
+	}
+	# score: counter bonus
+	if moveCountered = 1 && map(_iksys_scoreMoveCounteredFlag) = 0 {
+		scoreAdd{value: 100}
+		map(_iksys_scoreMoveCounteredFlag) := 1;
+	} else if moveCountered = 0 && map(_iksys_scoreMoveCounteredFlag) = 1 {
+		map(_iksys_scoreMoveCounteredFlag) := 0;
+	}
+	# code executed only by P1 and P2
+	if playerNo = teamSide && !isHelper {
+		# score: combo bonus
+		if comboCount != map(_iksys_scoreComboCount) {
+			if comboCount = 0 && map(_iksys_scoreComboCount) >= 2 {
+				switch map(_iksys_scoreComboCount) {
+				case 2:
+					scoreAdd{value: 300}
+				case 3:
+					scoreAdd{value: 500}
+				case 4:
+					scoreAdd{value: 1000}
+				case 5:
+					scoreAdd{value: 1200}
+				case 6:
+					scoreAdd{value: 1500}
+				case 7:
+					scoreAdd{value: 2000}
+				case 8:
+					scoreAdd{value: 2300}
+				case 9:
+					scoreAdd{value: 2600}
+				case 10:
+					scoreAdd{value: 3000}
+				case 11:
+					scoreAdd{value: 3300}
+				case 12:
+					scoreAdd{value: 3600}
+				case 13:
+					scoreAdd{value: 4000}
+				case 14:
+					scoreAdd{value: 4500}
+				default:
+					scoreAdd{value: min(10000, 5000 + (map(_iksys_scoreComboCount) - 15) * 1000)}
+				}
+			}
+			map(_iksys_scoreComboCount) := comboCount;
+		}
+		# score: win type bonus
+		if win && map(_iksys_scoreWinFlag) = 0 {
+			if winPerfect {
+				scoreAdd{value: 15000}
+			}
+			if winHyper {
+				scoreAdd{value: 10000}
+			} else if winSpecial {
+				scoreAdd{value: 3000}
+			}
+			map(_iksys_scoreWinFlag) := 1;
+		}
+	}
+}
