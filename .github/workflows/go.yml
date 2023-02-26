@@ -23,7 +23,7 @@ jobs:
 
     - name: Build
       run: |
-        set GOPATH=%cd%/go
+        #set GOPATH=%cd%/go
         go mod download
         go build -v ./... -o ./Ikemen_GO.exe ./src
 
