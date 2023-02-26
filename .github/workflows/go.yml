@@ -25,13 +25,12 @@ jobs:
 
     - name: Build
       env:
-        PATH: ${{ env.PATH }}:/usr/local/go/bin
+        #PATH: ${{ env.PATH }}:/usr/local/go/bin
         GOPATH: ${{ github.workspace }}/go
         CGO_ENABLED: 1
       run: |
-        pwd
-        echo ${{ env.GOPATH }}
-        echo $PATH
+        export PATH=$PATH:/usr/local/go/bin
+        cd ${{ github.workspace }}
         mkdir ${{ env.GOPATH }}
         sudo chown -R $USER:$USER ${{ env.GOPATH }}
         go mod download
@@ -39,11 +38,13 @@ jobs:
 
     - name: Deploy
       env:
-        PATH: ${{ env.PATH }}:/usr/local/go/bin
+        #PATH: ${{ env.PATH }}:/usr/local/go/bin
         GOPATH: ${{ github.workspace }}/go
         CGO_ENABLED: 1
       run: |
+        export PATH=$PATH:/usr/local/go/bin
         cd ${{ github.workspace }}
+        # Prepare repo assets
         mkdir deploy
         # Prepare repo assets
         cp -rfp data external ./deploy
