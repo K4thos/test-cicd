@@ -15,13 +15,14 @@ jobs:
     - name: Print cache key (windows)
       run: echo "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"
 
+    - name: Create go direcotry (windows)
+      run: mkdir ${{ github.workspace }}/go
+
     - name: Cache Go modules and dependencies (windows)
       id: cache-windows-go
       uses: actions/cache@v3
       with:
         path: |
-          go/pkg/mod
-          go/bin
           ${{ github.workspace }}/go
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
 
@@ -84,8 +85,8 @@ jobs:
       with:
         files: |
           ./deploy/*
-        tag_name: v1.0.3-windows
+        tag_name: v1.0.4-windows
         body: |
-          Release version 1.0.3-windows
+          Release version 1.0.4-windows
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
