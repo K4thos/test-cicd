@@ -90,3 +90,4 @@ jobs:
           Release version 1.0.4-windows
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
+        
