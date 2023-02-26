@@ -12,37 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Print cache key
-      run: echo "${{ runner.os }}-go-${{ hashFiles('**/go.sum', '**/go.mod') }}"
-
-    - name: Check cache status
-      uses: actions/cache@v3
-      with:
-        path: |
-          go/pkg/mod
-          go/bin
-          ${{ github.workspace }}/go
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum', '**/go.mod') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
-          ${{ runner.os }}-
-          windows-go-
-      id: cache-status
-
-    - name: Delete unneeded cache (windows)
-      uses: actions/cache@v3
-      with:
-        path: |
-          go/pkg/mod
-          go/bin
-          ${{ github.workspace }}/go
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum', '**/go.mod') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
-          ${{ runner.os }}-
-          windows-go-
-      id: delete-cache
-      if: steps.cache-status.outputs.cache-hit != 'true'
+    - name: Print cache key (windows)
+      run: echo "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"
 
     - name: Cache Go modules and dependencies (windows)
       id: cache-windows-go
@@ -52,21 +23,23 @@ jobs:
           go/pkg/mod
           go/bin
           ${{ github.workspace }}/go
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum', '**/go.mod') }}
-        cache-max-age: '7d'
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
 
     - name: Set up Go (windows)
       uses: actions/setup-go@v3
       with:
         go-version: 1.20.1
 
-    - name: Build from scratch (windows)
-      if: steps.cache-status.outputs.cache-hit != 'true'
+    - name: Install dependencies (windows)
       run: |
         echo "Installing dependencies (windows)"
         #choco install mingw
         choco install zip git
-        echo "Building (windows)"
+
+    - name: Generate cache (windows)
+      if: steps.cache-windows-go.outputs.cache-hit != 'true'
+      run: |
+        echo "Generating cache (windows)"
         set GOPATH=${{ github.workspace }}/go
         set CGO_ENABLED=1
         set CC=x86_64-w64-mingw32-gcc
@@ -75,12 +48,17 @@ jobs:
         set GOARCH=amd64
         go env -w GO111MODULE=on
         go mod download
-        go build -o ./Ikemen_GO.exe ./src
         
-    - name: Build from cache (windows)
-      if: steps.cache-status.outputs.cache-hit == 'true'
+    - name: Build (windows)
       run: |
-        echo "Using cached dependencies (windows)"
+        echo "Building with cached dependencies (windows)"
+        set GOPATH=${{ github.workspace }}/go
+        set CGO_ENABLED=1
+        set CC=x86_64-w64-mingw32-gcc
+        set CXX=x86_64-w64-mingw32-g++
+        set GOOS=windows
+        set GOARCH=amd64
+        go env -w GO111MODULE=on
         go build -o ./Ikemen_GO.exe ./src
 
     - name: Deploy (windows)
