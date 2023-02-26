@@ -1,6 +1,3 @@
-# This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
 name: Go
 
 on:
@@ -11,15 +8,19 @@ on:
 
 jobs:
 
-  build:
+  cicd:
     runs-on: ubuntu-latest
+    env:
+      PATH: ${{ env.PATH }}:/usr/local/go/bin
+      GOPATH: /root/test-cicd/go
+      CGO_ENABLED: 1
     steps:
     - uses: actions/checkout@v3
 
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19
+        go-version: 1.18
 
     - name: Install dependencies
       run: |
@@ -28,25 +29,21 @@ jobs:
 
     - name: Build
       run: |
-        export PATH=$PATH:/usr/local/go/bin
-        export GOPATH=/root/test-cicd/go
-        export CGO_ENABLED=1
         sudo go mod download
-        sudo go build -o ./Ikemen_GO.exe ./src
+        sudo go build -o ./Ikemen_GO ./src
 
     - name: Deploy
       run: |
-        export PATH=$PATH:/usr/local/go/bin
-        export GOPATH=./go
-        export CGO_ENABLED=1
-        sudo go mod download
-        sudo go build -o ./Ikemen_GO.exe ./src
-
-        sudo git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
-        sudo mkdir deploy
-        sudo cp -rfp data external ./deploy
-        sudo cp -rfp Ikemen_GO-Elecbyte-Screenpack/chars Ikemen_GO-Elecbyte-Screenpack/data Ikemen_GO-Elecbyte-Screenpack/font Ikemen_GO-Elecbyte-Screenpack/stages ./deploy
-        sudo cp -fp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt ./deploy/ScreenpackLicense.txt
+        mkdir deploy
+        # Prepare repo assets
+        cp -rfp data external ./deploy
+        cp -f ./Ikemen_GO ./deploy
+        # Prepare screenpack assets
+        git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
+        cd ./Ikemen_GO-Elecbyte-Screenpack
+        cp -rfp chars data font stages ./../deploy
+        cp -fp LICENCE.txt ./../deploy/ScreenpackLicense.txt
+        cd $GITHUB_WORKSPACE
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
@@ -58,4 +55,3 @@ jobs:
           Release version 1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
-
