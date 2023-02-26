@@ -31,7 +31,7 @@ jobs:
         export GOPATH=/root/test-cicd/go
         export CGO_ENABLED=1
         sudo go env -w GO111MODULE=on
-        sudo go mod -x download
+        sudo go mod download
         sudo go build -o ./Ikemen_GO ./src
   
     - name: Deploy
