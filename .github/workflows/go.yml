@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Cache Go modules and dependencies
+    - name: Cache Go modules and dependencies (windows)
       uses: actions/cache@v3
       with:
         path: |
@@ -21,20 +21,20 @@ jobs:
           ${{ github.workspace }}/go
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
 
-    - name: Set up Go
+    - name: Set up Go (windows)
       uses: actions/setup-go@v3
       with:
         go-version: 1.20.1
 
-    - name: Install dependencies
+    - name: Install dependencies (windows)
       run: |
-        echo "Installing dependencies"
-        choco install mingw zip git
+        echo "Installing dependencies (windows)"
+        # choco install mingw
+        choco install zip git
 
-    - name: Build
+    - name: Build (windows)
       run: |
-        echo "Building"
-        #set PATH=%PATH%;C:\Go\bin
+        echo "Building (windows)"
         set GOPATH=${{ github.workspace }}/go
         set CGO_ENABLED=1
         set CC=x86_64-w64-mingw32-gcc
@@ -45,15 +45,15 @@ jobs:
         go mod download
         go build -o ./Ikemen_GO.exe ./src
 
-    - name: Deploy
+    - name: Deploy (windows)
       run: |
-        echo "Deploying"
+        echo "Deploying (windows)"
         mkdir deploy
         cp Ikemen_GO.exe deploy\
-        echo "Preparing repo assets"
+        echo "Preparing repo assets (windows)"
         xcopy /E /I data\* deploy\data\
         xcopy /E /I external\* deploy\external\
-        echo "Preparing screenpack assets"
+        echo "Preparing screenpack assets (windows)"
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
         cd Ikemen_GO-Elecbyte-Screenpack       
         xcopy /E /I chars\* ${{ github.workspace }}\deploy\chars\
@@ -61,9 +61,9 @@ jobs:
         xcopy /E /I font\* ${{ github.workspace }}\deploy\font\
         xcopy /E /I stages\* ${{ github.workspace }}\deploy\stages\
         cp LICENCE.txt ${{ github.workspace }}\ScreenpackLicense.txt
-        echo "Succesfully prepared assets for deployment"
+        echo "Successfully prepared assets for deployment (windows)"
 
-    - name: Create Release
+    - name: Create Release (windows)
       uses: softprops/action-gh-release@v1
       with:
         files: |
