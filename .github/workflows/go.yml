@@ -15,11 +15,11 @@ jobs:
     - name: Print cache key (windows)
       run: echo "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"
 
-    - name: Create go direcotry (windows)
-      run: |
-        mkdir go/pkg/mod
-        mkdir go/bin
-        mkdir ${{ github.workspace }}/go
+#     - name: Create go direcotry (windows)
+#       run: |
+#         mkdir go/pkg/mod
+#         mkdir go/bin
+#         mkdir ${{ github.workspace }}/go
 
     - name: Cache Go modules and dependencies (windows)
       id: cache-windows-go
@@ -28,7 +28,7 @@ jobs:
         path: |
           go/pkg/mod
           go/bin
-          ${{ github.workspace }}/go
+          # ${{ github.workspace }}/go
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
 
     - name: Set up Go (windows)
@@ -45,7 +45,7 @@ jobs:
     - name: Build (windows)
       run: |
         echo "Building with cached dependencies (windows)"
-        set GOPATH=${{ github.workspace }}/go
+        # set GOPATH=${{ github.workspace }}/go
         set CGO_ENABLED=1
         set CC=x86_64-w64-mingw32-gcc
         set CXX=x86_64-w64-mingw32-g++
