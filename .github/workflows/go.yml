@@ -31,10 +31,8 @@ jobs:
         sudo go build -o ./Ikemen_GO.exe ./src
     - name: Deploy
       run: |
-        export PATH=$PATH:/usr/local/go/bin
-        export GOPATH=./go
-        export CGO_ENABLED=1
         # Prepare repo assets
+        mkdir -f ./deploy
         cp -rfp data external ./deploy
         cp -f ./Ikemen_GO ./deploy
         # Prepare screenpack assets
