@@ -29,7 +29,7 @@ jobs:
         GOPATH: ${{ github.workspace }}/go
         CGO_ENABLED: 1
       run: |
-        export PATH=$PATH:/usr/local/go/bin
+        PATH=$PATH:/usr/local/go/bin
         cd ${{ github.workspace }}
         mkdir ${{ env.GOPATH }}
         sudo chown -R $USER:$USER ${{ env.GOPATH }}
@@ -42,7 +42,7 @@ jobs:
         GOPATH: ${{ github.workspace }}/go
         CGO_ENABLED: 1
       run: |
-        export PATH=$PATH:/usr/local/go/bin
+        PATH=$PATH:/usr/local/go/bin
         cd ${{ github.workspace }}
         # Prepare repo assets
         mkdir deploy
