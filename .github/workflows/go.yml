@@ -20,19 +20,18 @@ jobs:
     - name: Install dependencies
       run: |
         echo "Installing dependencies"
-        choco install mingw
-        choco install zip
+        choco install mingw zip git
 
     - name: Build
       run: |
         echo "Building"
-        export PATH=$PATH:/usr/local/go/bin
-        export GOPATH=${{ github.workspace }}/go
-        export CGO_ENABLED=1
-        export CC=x86_64-w64-mingw32-gcc
-        export CXX=x86_64-w64-mingw32-g++
-        export GOOS=windows
-        export GOARCH=amd64
+        set PATH=%PATH%;C:\Go\bin
+        set GOPATH=${{ github.workspace }}/go
+        set CGO_ENABLED=1
+        set CC=x86_64-w64-mingw32-gcc
+        set CXX=x86_64-w64-mingw32-g++
+        set GOOS=windows
+        set GOARCH=amd64
         go env -w GO111MODULE=on
         go mod download
         go build -o ./Ikemen_GO.exe ./src
