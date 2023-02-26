@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build:
+  cicd:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -23,27 +23,28 @@ jobs:
         sudo apt-get update -y
         # sudo apt-get install mingw-w64
         sudo apt-get install -y git libx11-dev libxcursor-dev x11-xserver-utils libxrandr-dev libxinerama-dev libxi-dev libasound2-dev libgtk-3-dev libgl1-mesa-dev libglu1-mesa-dev libgtk-3-dev libxxf86vm-dev
+    
     - name: Build
       run: |
-        echo ${{ github.workspace }}
-        pwd
+        # echo ${{ github.workspace }}
         export PATH=$PATH:/usr/local/go/bin
         export GOPATH=/root/test-cicd/go
         export CGO_ENABLED=1
         sudo go env -w GO111MODULE=on
-        sudo go mod download
+        sudo go mod -x download
         sudo go build -o ./Ikemen_GO ./src
+  
     - name: Deploy
       run: |
+        mkdir ./deploy
         # Prepare repo assets
-        mkdir -f ./deploy
-        cp -rfp data external ./deploy
-        cp -f ./Ikemen_GO ./deploy
+        cp -rp data external ./deploy
+        cp ./Ikemen_GO ./deploy
         # Prepare screenpack assets
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
         cd ./Ikemen_GO-Elecbyte-Screenpack
-        cp -rfp chars data font stages ./../deploy
-        cp -fp LICENCE.txt ./../deploy/ScreenpackLicense.txt
+        cp -rp chars data font stages ./../deploy
+        cp -p LICENCE.txt ./../deploy/ScreenpackLicense.txt
         cd ${{ github.workspace }}
 
     - name: Create Release
@@ -51,8 +52,8 @@ jobs:
       with:
         files: |
           ./deploy/*
-        tag_name: v1.0.0
+        tag_name: v1.0.1
         body: |
-          Release version 1.0.0
+          Release version 1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
