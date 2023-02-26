@@ -21,32 +21,34 @@ jobs:
       run: |
         echo "Installing dependencies"
         sudo apt-get update -y
-        # sudo apt-get install mingw-w64
         sudo apt-get install -y git libx11-dev libxcursor-dev x11-xserver-utils libxrandr-dev libxinerama-dev libxi-dev libasound2-dev libgtk-3-dev libgl1-mesa-dev libglu1-mesa-dev libgtk-3-dev libxxf86vm-dev
     
     - name: Build
       run: |
         echo "Building"
+        export PATH=$PATH:/usr/local/go/bin
         export GOPATH=${{ github.workspace }}/go
         export CGO_ENABLED=1
         sudo go env -w GO111MODULE=on
         sudo go mod download
-        sudo GOOS=windows GOARCH=amd64 go build -o ./Ikemen_GO.exe ./src
-        sudo GOOS=linux GOARCH=amd64 go build -o ./Ikemen_GO_Linux ./src
-        sudo GOOS=darwin GOARCH=amd64 go build -o ./Ikemen_GO_MacOS ./src
-
+        sudo env GOOS=windows GOARCH=amd64 go build -o ./Ikemen_GO.exe ./src
+        sudo env GOOS=linux GOARCH=amd64 go build -o ./Ikemen_GO_Linux ./src
+        sudo env GOOS=darwin GOARCH=amd64 go build -o ./Ikemen_GO_MacOS ./src
+  
     - name: Deploy
       run: |
         echo "Deploying"
         mkdir ./deploy
         echo "Preparing repo assets"
         cp -rp data external ./deploy
-        cp ./Ikemen_GO_Linux ./Ikemen_GO.exe ./Ikemen_GO_MacOS ./deploy
+        cp ./Ikemen_GO.exe ./deploy/Ikemen_GO.exe
+        cp ./Ikemen_GO_Linux ./deploy/Ikemen_GO_Linux
+        cp ./Ikemen_GO_MacOS ./deploy/Ikemen_GO_MacOS
         echo "Preparing screenpack assets"
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
         cd ./Ikemen_GO-Elecbyte-Screenpack
         cp -rp chars data font stages ${{ github.workspace }}/deploy
-        cp -p ./LICENCE.txt ${{ github.workspace }}/deploy/ScreenpackLicense.txt
+        cp -p LICENCE.txt ${{ github.workspace }}/deploy/ScreenpackLicense.txt
         cd ${{ github.workspace }}
         echo "Successfully prepared assets for deployment"
 
@@ -55,8 +57,8 @@ jobs:
       with:
         files: |
           ./deploy/*
-        tag_name: v1.0.2
+        tag_name: v1.0.1
         body: |
-          Release version 1.0.2
+          Release version 1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
