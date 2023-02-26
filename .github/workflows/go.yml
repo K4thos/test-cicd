@@ -39,13 +39,19 @@ jobs:
     - name: Deploy
       run: |
         echo "Deploying"
-        mkdir ./deploy
-        cp -rp data external ./deploy
-        cp ./Ikemen_GO.exe ./deploy
+        mkdir deploy
+        cp Ikemen_GO.exe deploy\
+        echo "Preparing repo assets"
+        xcopy /E /I data\* deploy\data\
+        xcopy /E /I external\* deploy\external\
+        echo "Preparing screenpack assets"
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
-        cd ./Ikemen_GO-Elecbyte-Screenpack
-        cp -rp chars data font stages ${{ github.workspace }}/deploy
-        cp -p LICENCE.txt ${{ github.workspace }}/ScreenpackLicense.txt
+        cd Ikemen_GO-Elecbyte-Screenpack       
+        xcopy /E /I chars\* ${{ github.workspace }}\deploy\chars\
+        xcopy /E /I data\* ${{ github.workspace }}\deploy\data\
+        xcopy /E /I font\* ${{ github.workspace }}\deploy\font\
+        xcopy /E /I stages\* ${{ github.workspace }}\deploy\stages\
+        cp LICENCE.txt ${{ github.workspace }}\ScreenpackLicense.txt
         echo "Succesfully prepared assets for deployment"
 
     - name: Create Release
