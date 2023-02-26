@@ -10,10 +10,10 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Cache Go modules and dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           go/pkg/mod
@@ -22,9 +22,9 @@ jobs:
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.18
+        go-version: 1.20.1
 
     - name: Install dependencies
       run: |
@@ -68,8 +68,8 @@ jobs:
       with:
         files: |
           ./deploy/*
-        tag_name: v1.0.1
+        tag_name: v1.0.2-windows
         body: |
-          Release version 1.0.1
+          Release version 1.0.2-windows
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
