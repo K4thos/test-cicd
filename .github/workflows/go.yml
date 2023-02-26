@@ -27,34 +27,36 @@ jobs:
     - name: Build
       run: |
         echo "Building"
-        export PATH=$PATH:/usr/local/go/bin
         export GOPATH=${{ github.workspace }}/go
         export CGO_ENABLED=1
         sudo go env -w GO111MODULE=on
         sudo go mod download
-        sudo go build -o ./Ikemen_GO ./src
-  
+        sudo GOOS=windows GOARCH=amd64 go build -o ./Ikemen_GO.exe ./src
+        sudo GOOS=linux GOARCH=amd64 go build -o ./Ikemen_GO_Linux ./src
+        sudo GOOS=darwin GOARCH=amd64 go build -o ./Ikemen_GO_MacOS ./src
+
     - name: Deploy
       run: |
         echo "Deploying"
         mkdir ./deploy
-        echo "Prepareing repo assets"
+        echo "Preparing repo assets"
         cp -rp data external ./deploy
-        cp ./Ikemen_GO ./deploy
-        echo "Prepareing screenpack assets"
+        cp ./Ikemen_GO_Linux ./Ikemen_GO.exe ./Ikemen_GO_MacOS ./deploy
+        echo "Preparing screenpack assets"
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
         cd ./Ikemen_GO-Elecbyte-Screenpack
         cp -rp chars data font stages ${{ github.workspace }}/deploy
-        cp -p LICENCE.txt ${{ github.workspace }}/ScreenpackLicense.txt
-        echo "Succesfully prepared assets for deployment"
+        cp -p ./LICENCE.txt ${{ github.workspace }}/deploy/ScreenpackLicense.txt
+        cd ${{ github.workspace }}
+        echo "Successfully prepared assets for deployment"
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
           ./deploy/*
-        tag_name: v1.0.1
+        tag_name: v1.0.2
         body: |
-          Release version 1.0.1
+          Release version 1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
