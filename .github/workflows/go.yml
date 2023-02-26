@@ -7,7 +7,6 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   cicd:
     runs-on: ubuntu-latest
     steps:
@@ -20,13 +19,14 @@ jobs:
 
     - name: Install dependencies
       run: |
+        echo "Installing dependencies"
         sudo apt-get update -y
         # sudo apt-get install mingw-w64
         sudo apt-get install -y git libx11-dev libxcursor-dev x11-xserver-utils libxrandr-dev libxinerama-dev libxi-dev libasound2-dev libgtk-3-dev libgl1-mesa-dev libglu1-mesa-dev libgtk-3-dev libxxf86vm-dev
     
     - name: Build
       run: |
-        # echo ${{ github.workspace }}
+        echo "Building"
         export PATH=$PATH:/usr/local/go/bin
         export GOPATH=${{ github.workspace }}/go
         export CGO_ENABLED=1
@@ -36,16 +36,17 @@ jobs:
   
     - name: Deploy
       run: |
+        echo "Deploying"
         mkdir ./deploy
-        # Prepare repo assets
+        echo "Prepareing repo assets"
         cp -rp data external ./deploy
         cp ./Ikemen_GO ./deploy
-        # Prepare screenpack assets
+        echo "Prepareing screenpack assets"
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
         cd ./Ikemen_GO-Elecbyte-Screenpack
-        cp -rp chars data font stages ./../deploy
-        cp -p LICENCE.txt ./../deploy/ScreenpackLicense.txt
-        cd ${{ github.workspace }}
+        cp -rp chars data font stages ${{ github.workspace }}/deploy
+        cp -p LICENCE.txt ${{ github.workspace }}/ScreenpackLicense.txt
+        echo "Succesfully prepared assets for deployment"
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
