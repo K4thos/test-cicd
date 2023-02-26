@@ -28,7 +28,7 @@ jobs:
       run: |
         # echo ${{ github.workspace }}
         export PATH=$PATH:/usr/local/go/bin
-        export GOPATH=/root/test-cicd/go
+        export GOPATH=${{ github.workspace }}/go
         export CGO_ENABLED=1
         sudo go env -w GO111MODULE=on
         sudo go mod download
