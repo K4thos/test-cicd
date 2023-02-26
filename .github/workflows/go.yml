@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  cicd:
+  build:
     runs-on: ubuntu-latest
     env:
       PATH: ${{ env.PATH }}:/usr/local/go/bin
