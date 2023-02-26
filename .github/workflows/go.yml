@@ -12,6 +12,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Cache Go modules and dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          go/pkg/mod
+          go/bin
+          ${{ github.workspace }}/go
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
@@ -64,4 +73,3 @@ jobs:
           Release version 1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
-
