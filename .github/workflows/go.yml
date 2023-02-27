@@ -61,10 +61,11 @@ jobs:
         cp -r data external Ikemen_GO-Elecbyte-Screenpack/chars Ikemen_GO-Elecbyte-Screenpack/data Ikemen_GO-Elecbyte-Screenpack/font Ikemen_GO-Elecbyte-Screenpack/stages deploy/
         cp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt deploy/ScreenpackLicense.txt
         echo "Zipping deploy directory"
+        cd deploy
         if [ "$RUNNER_OS" == "Windows" ]; then
-          "/c/Program Files/7-Zip/7z.exe" a Ikemen_GO-dev-$goos.zip deploy/*
+          "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-$goos.zip *
         else
-          zip -r Ikemen_GO-dev-$goos.zip deploy/*
+          zip -r ../Ikemen_GO-dev-$goos.zip *
         fi
         echo "Successfully prepared assets for deployment"
       shell: bash
@@ -72,14 +73,22 @@ jobs:
         goos: ${{ matrix.cfg.goos }}
         binName: ${{ matrix.cfg.bin }}
 
-    - name: Update nightly release
-      uses: pyTooling/Actions/releaser@main
+    - name: Create Release
+      uses: actions/create-release@v1
       with:
-        tag: nightly
-        rm: true
-        token: ${{ secrets.GITHUB_TOKEN }}
-        #files: ./deploy/*
-        files: ${{ github.workspace }}/Ikemen_GO-dev-${{ matrix.cfg.goos }}.zip
+        tag_name: nightly
+        release_name: Nightly Release
+        draft: false
+        prerelease: true
       env:
-        GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
-  
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Release Assets
+      uses: actions/upload-release-asset@v1
+      with:
+        files: ${{ github.workspace }}/Ikemen_GO-dev-$goos.zip
+        #asset_path: Ikemen_GO-dev-$goos.zip
+        #asset_name: Ikemen_GO-dev-$goos.zip
+        #asset_content_type: application/zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
