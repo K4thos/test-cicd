@@ -12,9 +12,9 @@ jobs:
     strategy:
       matrix:
         cfg:
-          - { os: 'windows-2022', goos: 'windows', goarch: 'amd64', bin: 'Ikemen_GO.exe', cc: x86_64-w64-mingw32-gcc, ccx: x86_64-w64-mingw32-g++ }
-          - { os: 'ubuntu-22.04', goos: 'linux',   goarch: 'amd64', bin: 'Ikemen_GO_Linux' }
-          - { os: 'macos-11',     goos: 'darwin',  goarch: 'amd64', bin: 'Ikemen_GO_MacOS' }
+          - { runner_os: 'windows', os: 'windows-2022', goos: 'windows', goarch: 'amd64', bin: 'Ikemen_GO.exe', cc: x86_64-w64-mingw32-gcc, ccx: x86_64-w64-mingw32-g++ }
+          - { runner_os: 'linux', os: 'ubuntu-22.04', goos: 'linux',   goarch: 'amd64', bin: 'Ikemen_GO_Linux' }
+          - { runner_os: 'macos', os: 'macos-11',     goos: 'darwin',  goarch: 'amd64', bin: 'Ikemen_GO_MacOS' }
           
     runs-on: ${{ matrix.cfg.os }}
     steps:
@@ -62,9 +62,9 @@ jobs:
         echo "Zipping deploy directory"
         cd deploy
         if [ "$RUNNER_OS" == "Windows" ]; then
-          "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-$RUNNER_OS.zip *
+          "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
         else
-          zip -r ../Ikemen_GO-dev-$RUNNER_OS.zip *
+          zip -r ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
         fi
         echo "Successfully prepared assets for deployment"
       shell: bash
@@ -73,7 +73,7 @@ jobs:
       uses: softprops/action-gh-release@master
       with:
         files: |
-          ${{ github.workspace }}/Ikemen_GO-dev-$RUNNER_OS.zip
+          ${{ github.workspace }}/Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
         tag_name: nightly
         update_tag: true
         fail_on_unmatched_files: true
