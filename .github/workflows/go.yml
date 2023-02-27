@@ -73,15 +73,15 @@ jobs:
         goos: ${{ matrix.cfg.goos }}
         binName: ${{ matrix.cfg.bin }}
 
-    - name: Create Release
-      uses: actions/create-release@v1
-      with:
-        tag_name: nightly
-        release_name: Nightly Release
-        draft: false
-        prerelease: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#     - name: Create Release
+#       uses: actions/create-release@v1
+#       with:
+#         tag_name: nightly
+#         release_name: Nightly Release
+#         draft: false
+#         prerelease: true
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload Release Assets
       uses: actions/upload-release-asset@v1
