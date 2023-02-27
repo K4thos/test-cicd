@@ -39,16 +39,15 @@ jobs:
         go env -w GO111MODULE=on
         go mod download
         if [ "$RUNNER_OS" == "Windows" ]; then
-          go build -v -ldflags "-H windowsgui" -o ./$binName ./src
+          go build -v -ldflags "-H windowsgui" -o ./${{ matrix.cfg.bin }} ./src
         else
-          go build -v -o ./$binName ./src
+          go build -v -o ./${{ matrix.cfg.bin }} ./src
         fi
       shell: bash
       env:
         CGO_ENABLED: 1
         GOOS: ${{ matrix.cfg.goos }}
         GOARCH: ${{ matrix.cfg.goarch }}
-        binName: ${{ matrix.cfg.bin }}
         #CC: ${{ matrix.cfg.cc }}
         #CCX: ${{ matrix.cfg.cxx }}
 
@@ -56,22 +55,19 @@ jobs:
       run: |
         echo "Preparing files for deployment"
         mkdir deploy
-        cp $binName deploy/
+        cp ${{ matrix.cfg.bin }} deploy/
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
         cp -r data external Ikemen_GO-Elecbyte-Screenpack/chars Ikemen_GO-Elecbyte-Screenpack/data Ikemen_GO-Elecbyte-Screenpack/font Ikemen_GO-Elecbyte-Screenpack/stages deploy/
         cp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt deploy/ScreenpackLicense.txt
         echo "Zipping deploy directory"
         cd deploy
         if [ "$RUNNER_OS" == "Windows" ]; then
-          "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-$goos.zip *
+          "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-${{ matrix.cfg.goos }}.zip *
         else
-          zip -r ../Ikemen_GO-dev-$goos.zip *
+          zip -r ../Ikemen_GO-dev-${{ matrix.cfg.goos }}.zip *
         fi
         echo "Successfully prepared assets for deployment"
       shell: bash
-      env:
-        goos: ${{ matrix.cfg.goos }}
-        binName: ${{ matrix.cfg.bin }}
 
 #     - name: Create Release
 #       uses: actions/create-release@v1
