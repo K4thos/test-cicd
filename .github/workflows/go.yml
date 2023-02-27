@@ -68,25 +68,12 @@ jobs:
         mkdir deploy
         cp $binName deploy/
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
-        if [[ "$OSTYPE" == "msys"* ]]; then
-          xcopy /E /I data\* deploy\data\
-          xcopy /E /I external\* deploy\external\
-          xcopy /E /I Ikemen_GO-Elecbyte-Screenpack\chars\* deploy\chars\
-          xcopy /E /I Ikemen_GO-Elecbyte-Screenpack\data\* deploy\data\
-          xcopy /E /I Ikemen_GO-Elecbyte-Screenpack\font\* deploy\font\
-          xcopy /E /I Ikemen_GO-Elecbyte-Screenpack\stages\* deploy\stages\
-          cp Ikemen_GO-Elecbyte-Screenpack\LICENCE.txt deploy\ScreenpackLicense.txt
-          echo "Zipping deploy directory"
-          cd deploy
-          "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-$goos.zip *
-        else
-          cp -r data external Ikemen_GO-Elecbyte-Screenpack/chars Ikemen_GO-Elecbyte-Screenpack/data Ikemen_GO-Elecbyte-Screenpack/font Ikemen_GO-Elecbyte-Screenpack/stages deploy/
-          cp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt deploy/ScreenpackLicense.txt
-          echo "Zipping deploy directory"
-          cd deploy
-          zip -r ../Ikemen_GO-dev-$goos.zip *
-        fi
+        cp -r data external Ikemen_GO-Elecbyte-Screenpack/chars Ikemen_GO-Elecbyte-Screenpack/data Ikemen_GO-Elecbyte-Screenpack/font Ikemen_GO-Elecbyte-Screenpack/stages deploy/
+        cp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt deploy/ScreenpackLicense.txt
+        echo "Zipping deploy directory"
+        cd deploy
         echo "Successfully prepared assets for deployment"
+      shell: bash
       env:
         goos: ${{ matrix.cfg.goos }}
         binName: ${{ matrix.cfg.bin }}
