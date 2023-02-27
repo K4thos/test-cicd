@@ -78,5 +78,9 @@ jobs:
         tag: nightly
         rm: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        files: deploy/*
+        #files: ./deploy/*
+        files: ./Ikemen_GO-dev-$goos.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
+        goos: ${{ matrix.cfg.goos }}
   
