@@ -60,12 +60,12 @@ jobs:
         cp -r data external Ikemen_GO-Elecbyte-Screenpack/chars Ikemen_GO-Elecbyte-Screenpack/data Ikemen_GO-Elecbyte-Screenpack/font Ikemen_GO-Elecbyte-Screenpack/stages deploy/
         cp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt deploy/ScreenpackLicense.txt
         echo "Zipping deploy directory"
-        cd deploy
-        if [ "$RUNNER_OS" == "Windows" ]; then
-          "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-$goos.zip *
-        else
-          zip -r ../Ikemen_GO-dev-$goos.zip *
-        fi
+        #cd deploy
+        #if [ "$RUNNER_OS" == "Windows" ]; then
+        #  "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-$goos.zip *
+        #else
+        zip -r Ikemen_GO-dev-$goos.zip deploy/*
+        #fi
         echo "Successfully prepared assets for deployment"
       shell: bash
       env:
