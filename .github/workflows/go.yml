@@ -64,7 +64,7 @@ jobs:
 
     - name: Deploy
       run: |
-        echo "Deploying"
+        echo "Preparing files for deployment"
         mkdir deploy
         cp $binName deploy/
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
@@ -72,6 +72,11 @@ jobs:
         cp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt deploy/ScreenpackLicense.txt
         echo "Zipping deploy directory"
         cd deploy
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-$goos.zip *
+        else
+          zip -r ../Ikemen_GO-dev-$goos.zip *
+        fi
         echo "Successfully prepared assets for deployment"
       shell: bash
       env:
