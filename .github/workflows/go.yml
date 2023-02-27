@@ -75,8 +75,10 @@ jobs:
         files: |
           ${{ github.workspace }}/Ikemen_GO-dev-$goos.zip
         tag_name: nightly
-        update_tag: true
-        append_body: true
+        #update_tag: true
+        #append_body: true
+        fail_on_unmatched_files: true
+        generate_release_notes: true
         body: |
           Nightly build
       env:
