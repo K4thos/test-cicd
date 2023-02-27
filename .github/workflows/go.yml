@@ -12,24 +12,16 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up Go (windows)
-      uses: actions/setup-go@v3
+    - name: Setup Golang with cache (windows)
+      uses: magnetikonline/action-golang-cache@v3
       with:
         go-version: 1.20.1
-
-    - name: Cache Go modules and dependencies (windows)
-      id: cache-windows-go
-      uses: actions/cache@v3
-      with:
-        path: |
-          go/pkg/mod
-          go/bin
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        #go-version-file: go.mod
+        #cache-key-suffix: -ikemen
 
     - name: Install dependencies (windows)
       run: |
         echo "Installing dependencies (windows)"
-        #choco install mingw
         choco install zip git
 
     - name: Build (windows)
@@ -67,9 +59,9 @@ jobs:
       with:
         files: |
           ./deploy/*
-        tag_name: v1.0.5-windows
+        tag_name: v1.0.6-windows
         body: |
-          Release version 1.0.5-windows
+          Release version 1.0.6-windows
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
         
