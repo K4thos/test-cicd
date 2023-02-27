@@ -70,12 +70,12 @@ jobs:
       shell: bash
 
     - name: Create Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@main
       with:
         files: |
-          ${{ github.workspace }}/Ikemen_GO-dev-$goos.zip
+          ${{ github.workspace }}/Ikemen_GO-dev-${{ matrix.cfg.goos }}.zip
         tag_name: nightly
-        #update_tag: true
+        update_tag: true
         #append_body: true
         fail_on_unmatched_files: true
         generate_release_notes: true
