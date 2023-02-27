@@ -58,13 +58,14 @@ jobs:
         cp ${{ matrix.cfg.bin }} deploy/
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
         cp -r data external font Ikemen_GO-Elecbyte-Screenpack/chars Ikemen_GO-Elecbyte-Screenpack/data Ikemen_GO-Elecbyte-Screenpack/font Ikemen_GO-Elecbyte-Screenpack/stages deploy/
+        cp License.txt deploy/
         cp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt deploy/ScreenpackLicense.txt
         echo "Zipping deploy directory"
         cd deploy
         if [ "$RUNNER_OS" == "Windows" ]; then
           "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
         else
-          cp build/Ikemen_GO.command deploy/
+          cp ../build/Ikemen_GO.command deploy/
           zip -r ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
         fi
         echo "Successfully prepared assets for deployment"
