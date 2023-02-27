@@ -60,14 +60,26 @@ jobs:
         cp -r data external Ikemen_GO-Elecbyte-Screenpack/chars Ikemen_GO-Elecbyte-Screenpack/data Ikemen_GO-Elecbyte-Screenpack/font Ikemen_GO-Elecbyte-Screenpack/stages deploy/
         cp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt deploy/ScreenpackLicense.txt
         echo "Zipping deploy directory"
-        #cd deploy
-        #if [ "$RUNNER_OS" == "Windows" ]; then
-        #  "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-$goos.zip *
-        #else
-        zip -r Ikemen_GO-dev-$goos.zip deploy/*
-        #fi
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          "/c/Program Files/7-Zip/7z.exe" a Ikemen_GO-dev-$goos.zip deploy/*
+        else
+          zip -r Ikemen_GO-dev-$goos.zip deploy/*
+        fi
         echo "Successfully prepared assets for deployment"
       shell: bash
       env:
         goos: ${{ matrix.cfg.goos }}
         binName: ${{ matrix.cfg.bin }}
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./Ikemen_GO-dev-$goos.zip
+        tag_name: nightly
+        body: |
+          Release version dev-$goos
+      env:
+        GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
+        goos: ${{ matrix.cfg.goos }}
+  
