@@ -68,9 +68,9 @@ jobs:
       with:
         files: |
           ./deploy/*
-        tag_name: v1.0.6-windows
+        tag_name: v1.0.7-windows
         body: |
-          Release version 1.0.6-windows
+          Release version 1.0.7-windows
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
         
