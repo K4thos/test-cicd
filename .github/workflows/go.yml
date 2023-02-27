@@ -71,14 +71,15 @@ jobs:
         goos: ${{ matrix.cfg.goos }}
         binName: ${{ matrix.cfg.bin }}
 
-    - name: Create Release
+    - name: Create/Update Release
       uses: softprops/action-gh-release@v1
       with:
-        files: |
+        asset_path: |
           ./Ikemen_GO-dev-$goos.zip
         tag_name: nightly
+        create: true
         body: |
-          Release version dev-$goos
+          Nightly dev build
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
         goos: ${{ matrix.cfg.goos }}
