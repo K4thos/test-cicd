@@ -26,17 +26,6 @@ jobs:
         #go-version-file: go.mod
         #cache-key-suffix: -ikemen
 
-    - name: Setup dependencies caches (windows)
-      if: runner.os == 'windows'
-      uses: actions/cache@v3
-      with:
-        path: |
-          C:\ProgramData\chocolatey\lib\git*
-          C:\ProgramData\chocolatey\lib\zip*
-        key: ${{ runner.os }}-dependencies-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-dependencies-
-
     - name: Install dependencies
       run: |
         if [ "$RUNNER_OS" == "Linux" ]; then
