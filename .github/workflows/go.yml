@@ -56,12 +56,11 @@ jobs:
         xcopy /E /I external\* deploy\external\
         echo "Preparing screenpack assets (windows)"
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
-        cd Ikemen_GO-Elecbyte-Screenpack       
-        xcopy /E /I chars\* ${{ github.workspace }}\deploy\chars\
-        xcopy /E /I data\* ${{ github.workspace }}\deploy\data\
-        xcopy /E /I font\* ${{ github.workspace }}\deploy\font\
-        xcopy /E /I stages\* ${{ github.workspace }}\deploy\stages\
-        cp LICENCE.txt ${{ github.workspace }}\ScreenpackLicense.txt
+        xcopy /E /I Ikemen_GO-Elecbyte-Screenpack\chars\* deploy\chars\
+        xcopy /E /I Ikemen_GO-Elecbyte-Screenpack\data\* deploy\data\
+        xcopy /E /I Ikemen_GO-Elecbyte-Screenpack\font\* deploy\font\
+        xcopy /E /I Ikemen_GO-Elecbyte-Screenpack\stages\* deploy\stages\
+        cp Ikemen_GO-Elecbyte-Screenpack\LICENCE.txt deploy\ScreenpackLicense.txt
         echo "Successfully prepared assets for deployment (windows)"
 
     - name: Create Release (windows)
