@@ -61,16 +61,20 @@ jobs:
         xcopy /E /I Ikemen_GO-Elecbyte-Screenpack\font\* deploy\font\
         xcopy /E /I Ikemen_GO-Elecbyte-Screenpack\stages\* deploy\stages\
         cp Ikemen_GO-Elecbyte-Screenpack\LICENCE.txt deploy\ScreenpackLicense.txt
+        echo "Zipping deploy directory (windows)"
+        cd deploy
+        zip -r ../Ikemen_GO-v1.0.7-windows.zip *
         echo "Successfully prepared assets for deployment (windows)"
 
     - name: Create Release (windows)
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ./deploy/*
+          ./Ikemen_GO-v1.0.7-windows.zip
         tag_name: v1.0.7-windows
         body: |
           Release version 1.0.7-windows
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
+
         
