@@ -65,7 +65,7 @@ jobs:
         if [ "$RUNNER_OS" == "Windows" ]; then
           "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
         else
-          cp ../build/Ikemen_GO.command deploy/
+          cp ../build/Ikemen_GO.command .
           zip -r ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
         fi
         echo "Successfully prepared assets for deployment"
