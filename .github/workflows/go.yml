@@ -69,6 +69,19 @@ jobs:
         echo "Successfully prepared assets for deployment"
       shell: bash
 
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ${{ github.workspace }}/Ikemen_GO-dev-$goos.zip
+        tag_name: nightly
+        update_tag: true
+        append_body: true
+        body: |
+          Nightly build
+      env:
+        GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
+
 #     - name: Create Release
 #       uses: actions/create-release@v1
 #       with:
