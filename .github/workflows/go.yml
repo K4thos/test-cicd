@@ -79,8 +79,7 @@ jobs:
         rm: true
         token: ${{ secrets.GITHUB_TOKEN }}
         #files: ./deploy/*
-        files: ./Ikemen_GO-dev-$goos.zip
+        files: ${{ github.workspace }}/Ikemen_GO-dev-${{ matrix.cfg.goos }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
-        goos: ${{ matrix.cfg.goos }}
   
