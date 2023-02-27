@@ -74,7 +74,7 @@ jobs:
       uses: iTrooz/action-gh-release@test
       with:
         files: |
-          ${{ github.workspace }}//Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip || Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
+          ${{ github.workspace }}/Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip || Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
         tag_name: nightly
         update_tag: true
         fail_on_unmatched_files: true
