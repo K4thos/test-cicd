@@ -57,13 +57,14 @@ jobs:
         mkdir deploy
         cp ${{ matrix.cfg.bin }} deploy/
         git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git
-        cp -r data external Ikemen_GO-Elecbyte-Screenpack/chars Ikemen_GO-Elecbyte-Screenpack/data Ikemen_GO-Elecbyte-Screenpack/font Ikemen_GO-Elecbyte-Screenpack/stages deploy/
+        cp -r data external font Ikemen_GO-Elecbyte-Screenpack/chars Ikemen_GO-Elecbyte-Screenpack/data Ikemen_GO-Elecbyte-Screenpack/font Ikemen_GO-Elecbyte-Screenpack/stages deploy/
         cp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt deploy/ScreenpackLicense.txt
         echo "Zipping deploy directory"
         cd deploy
         if [ "$RUNNER_OS" == "Windows" ]; then
           "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
         else
+          cp build/Ikemen_GO.command deploy/
           zip -r ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
         fi
         echo "Successfully prepared assets for deployment"
@@ -71,15 +72,15 @@ jobs:
 
     - name: Update dev release (Windows)
       if: matrix.cfg.runner_os == 'windows'
-      uses: softprops/action-gh-release@v1
-      #uses: iTrooz/action-gh-release@test
+      #uses: softprops/action-gh-release@v1
+      uses: iTrooz/action-gh-release@test
       with:
         files: |
           Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
         tag_name: nightly
-        #update_tag: true
         fail_on_unmatched_files: true
         generate_release_notes: true
+        update_tag: true
         body: |
           Nightly build
       env:
@@ -87,15 +88,15 @@ jobs:
       
     - name: Update dev release (Linux/macOs)
       if: matrix.cfg.runner_os != 'windows'
-      uses: softprops/action-gh-release@v1
-      #uses: iTrooz/action-gh-release@test
+      #uses: softprops/action-gh-release@v1
+      uses: iTrooz/action-gh-release@test
       with:
         files: |
           ${{ github.workspace }}/Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
         tag_name: nightly
-        #update_tag: true
         fail_on_unmatched_files: true
         generate_release_notes: true
+        update_tag: true
         body: |
           Nightly build
       env:
