@@ -1,0 +1,55 @@
+name: Pull request template
+description: Create a pull request
+body:
+  - type: checkboxes
+    id: pr-type
+    attributes:
+      label: PR Type
+      description: What kind of change does this PR introduce?
+      options:
+        - Bugfix
+        - Feature
+        - Code style (cosmetic, formatting, typos, comments, variable names)
+        - Code refactoring (no functional changes)
+        - Build related changes
+        - Documentation changes
+        - Other... Please describe:
+    validations:
+      required: true
+
+  - type: textarea
+    id: pr-current
+    attributes:
+      label: What is the current behavior?
+      description: Please describe the current behavior that you are modifying, or link to a relevant issue.
+      placeholder: |
+        Issue Number: N/A
+    validations:
+      required: false
+
+  - type: textarea
+    id: pr-new
+    attributes:
+      label: What is the new behavior?
+      description: Please describe what your PR does. (the new behavior after your modification)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: pr-breaking
+    attributes:
+      label: Does this PR introduce a breaking change?
+      description: Select if this PR contains a change that impacts compatibility with existing content.
+      options:
+        - Yes
+        - No
+    validations:
+      required: true
+
+  - type: textarea
+    id: pr-other
+    attributes:
+      label: Other information
+      description: Any other information related to the PR.
+    validations:
+      required: false
