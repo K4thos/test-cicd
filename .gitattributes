@@ -4,7 +4,6 @@
 *.command text eol=lf
 *.cmd text eol=crlf
 
-
 # Syntax
 *.def linguist-language=ini
 *.air linguist-language=ini
@@ -31,3 +30,4 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
