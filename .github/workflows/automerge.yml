@@ -32,7 +32,6 @@ jobs:
         uses: "pascalgn/automerge-action@v0.15.6"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          #GITHUB_TOKEN: "${{ secrets.IKEMEN_TOKEN }}"
           MERGE_LABELS: "!.wip"
           MERGE_REMOVE_LABELS: ""
           MERGE_METHOD: ""
