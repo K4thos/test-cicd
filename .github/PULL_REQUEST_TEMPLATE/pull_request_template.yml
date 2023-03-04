@@ -11,8 +11,8 @@ body:
         - Feature
         - Code style (cosmetic, formatting, typos, comments, variable names)
         - Code refactoring (no functional changes)
-        - Build related changes
-        - Documentation changes
+        - Build (workflows, dependencies)
+        - Documentation
         - Other... Please describe:
     validations:
       required: true
@@ -23,6 +23,7 @@ body:
       label: What is the current behavior?
       description: Please describe the current behavior that you are modifying, or link to a relevant issue.
       placeholder: |
+        Description ...
         Issue Number: N/A
     validations:
       required: false
@@ -32,6 +33,8 @@ body:
     attributes:
       label: What is the new behavior?
       description: Please describe what your PR does. (the new behavior after your modification)
+      placeholder: |
+        Description ...
     validations:
       required: true
 
