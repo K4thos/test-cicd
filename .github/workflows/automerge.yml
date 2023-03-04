@@ -1,4 +1,5 @@
 name: automerge
+
 on:
   pull_request:
     types:
@@ -17,17 +18,21 @@ on:
     types:
       - completed
   status: {}
+
+permissions:
+  checks: write
+  contents: write
+
 jobs:
   automerge:
     runs-on: ubuntu-latest
     steps:
       - id: automerge
-        #permissions: write-all
         name: automerge
         uses: "pascalgn/automerge-action@v0.15.6"
         env:
-          #GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          GITHUB_TOKEN: "${{ secrets.IKEMEN_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          #GITHUB_TOKEN: "${{ secrets.IKEMEN_TOKEN }}"
           MERGE_LABELS: "!.wip"
           MERGE_REMOVE_LABELS: ""
           MERGE_METHOD: ""
