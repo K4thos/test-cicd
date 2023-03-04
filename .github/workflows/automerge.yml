@@ -1,5 +1,4 @@
 name: automerge
-description: GitHub action to automatically merge pull requests that are ready
 on:
   pull_request:
     types:
