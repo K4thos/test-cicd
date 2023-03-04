@@ -25,10 +25,10 @@ jobs:
         name: automerge
         uses: "pascalgn/automerge-action@v0.15.6"
         env:
-          GITHUB_TOKEN: "${{ secrets.IKEMEN_TOKEN }}"
-          MERGE_LABELS: ".automerge,!.wip"
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_LABELS: "!.wip"
           MERGE_REMOVE_LABELS: ""
-          MERGE_METHOD: "merge"
+          MERGE_METHOD: ""
           MERGE_METHOD_LABELS: ".automerge=merge,.autosquash=squash,.autorebase=rebase"
           MERGE_METHOD_LABEL_REQUIRED: "false"
           MERGE_COMMIT_MESSAGE: "pull-request-title-and-description"
@@ -38,7 +38,7 @@ jobs:
           MERGE_RETRIES: "3"
           MERGE_RETRY_SLEEP: "10000"
           MERGE_REQUIRED_APPROVALS: "0"
-          MERGE_DELETE_BRANCH: "false"
+          MERGE_DELETE_BRANCH: "true"
           MERGE_DELETE_BRANCH_FILTER: ""
           MERGE_ERROR_FAIL: "true"
           MERGE_READY_STATE: "clean,has_hooks,unknown,unstable"
