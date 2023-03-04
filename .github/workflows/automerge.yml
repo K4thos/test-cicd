@@ -37,7 +37,7 @@ jobs:
           MERGE_METHOD: ""
           MERGE_METHOD_LABELS: ".automerge=merge,.autosquash=squash,.autorebase=rebase"
           MERGE_METHOD_LABEL_REQUIRED: "true"
-          MERGE_COMMIT_MESSAGE: "pull-request-title-and-description"
+          MERGE_COMMIT_MESSAGE: "pull-request-title-and-description {pullRequest.number}"
           MERGE_COMMIT_MESSAGE_REGEX: ""
           MERGE_FILTER_AUTHOR: ""
           MERGE_FORKS: "true"
