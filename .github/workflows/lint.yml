@@ -1,4 +1,4 @@
-name: Lint
+name: lint
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 jobs:
-  run-linters:
+  style-linters:
     name: Run linters
     runs-on: ubuntu-latest
     steps:
