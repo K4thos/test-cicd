@@ -8,7 +8,7 @@ on:
       - main
   # Replace pull_request with pull_request_target if you
   # plan to use this action with forks, see the Limitations section
-  pull_request:
+  pull_request_target:
     branches:
       - main
 
@@ -35,3 +35,4 @@ jobs:
         with:
           gofmt: true
           auto_fix: true
+          commit_message: "style: fix code style issues with ${linter}"
