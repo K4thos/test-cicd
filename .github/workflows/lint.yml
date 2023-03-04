@@ -34,5 +34,7 @@ jobs:
         uses: wearerequired/lint-action@v2
         with:
           gofmt: true
+          continue_on_error: false
           auto_fix: true
           commit_message: "style: fix code style issues with ${linter}"
+          neutral_check_on_warning: true
