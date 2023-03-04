@@ -26,7 +26,7 @@ jobs:
         uses: "pascalgn/automerge-action@v0.15.6"
         env:
           GITHUB_TOKEN: "${{ secrets.IKEMEN_TOKEN }}"
-          MERGE_LABELS: ".automerge,.autosquash=squash,.autorebase=rebase,!.wip"
+          MERGE_LABELS: ".automerge,.autosquash,.autorebase,!.wip"
           MERGE_REMOVE_LABELS: ""
           MERGE_METHOD: "merge"
           MERGE_METHOD_LABELS: ".automerge=merge,.autosquash=squash,.autorebase=rebase"
