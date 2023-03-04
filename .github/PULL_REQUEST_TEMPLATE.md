@@ -3,7 +3,6 @@
 
 Issue Number: N/A
 
-
 ## What is the new behavior?
 <!-- Please describe the new behavior after your modification. -->
 
@@ -11,7 +10,6 @@ Issue Number: N/A
 ## PR Type
 What kind of change does this PR introduce?
 <!-- Please check the one that applies to this PR using "x". -->
-
 - [ ] Bugfix
 - [ ] Feature
 - [ ] Code style (cosmetic, formatting, typos, comments, variable names)
@@ -20,9 +18,7 @@ What kind of change does this PR introduce?
 - [ ] Documentation
 - [ ] Other... Please describe:
 
-
 ## Does this PR introduce a breaking change?
-
 - [ ] Yes
 - [ ] No
 
