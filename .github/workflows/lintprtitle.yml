@@ -21,8 +21,8 @@ jobs:
           on-failed-regex-comment: |
             Don't worry, if you can't fix the problem with the PR title, a person who takes care of things will handle it.
             We use precise git commit title formatting for readable messages and to generate auto releases and change log:
-            <type>: <description>
-            Where <type> must be one of the following:
+            \<type\>: \<description\>
+            Where \<type\> must be one of the following: 
             - build: Changes that affect the build system or external dependencies
             - ci: Changes to our CI configuration files and scripts
             - docs: Documentation only changes
@@ -33,5 +33,5 @@ jobs:
             - style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
             - test: Adding missing tests or correcting existing tests
 
-          on-succeeded-regex-dismiss-review-comment: |
-            PR title matches our git commit title formatting guidelines.
+          #on-succeeded-regex-dismiss-review-comment: |
+          #  PR title matches our git commit title formatting guidelines.
