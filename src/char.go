@@ -17,7 +17,7 @@ const (
 	SCF_ko SystemCharFlag = 1 << iota
 	SCF_ctrl
 	SCF_standby
-			SCF_guard
+	SCF_guard
 	SCF_airjump
 	SCF_over
 	SCF_ko_round_middle
