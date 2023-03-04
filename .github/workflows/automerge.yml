@@ -30,7 +30,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.IKEMEN_TOKEN }}"
           MERGE_LABELS: "!.wip"
           MERGE_REMOVE_LABELS: ""
-          MERGE_METHOD: "merge"
+          MERGE_METHOD: ""
           MERGE_METHOD_LABELS: ".automerge=merge,.autosquash=squash,.autorebase=rebase"
           MERGE_METHOD_LABEL_REQUIRED: "false"
           MERGE_COMMIT_MESSAGE: "pull-request-title-and-description"
