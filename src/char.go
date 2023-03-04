@@ -12,10 +12,10 @@ const MaxPalNo = 12
 const MaxQuotes = 100
 
 type SystemCharFlag uint32
-	
+
 const (
 	SCF_ko SystemCharFlag = 1 << iota
-		SCF_ctrl	
+	SCF_ctrl
 	SCF_standby
 	SCF_guard
 	SCF_airjump
