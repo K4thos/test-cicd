@@ -13,7 +13,7 @@ jobs:
       - uses: morrisoncole/pr-lint-action@v1.7.0
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          title-regex: "^\\bbuild|ci|docs|feat|fix|perf|refactor|style|test\\b\\(?[^\\)]*\\)?: .+$" | "^v[0-9]+\\.[0-9]+\\.[0-9]+"
+          title-regex: "^(\\bbuild|ci|docs|feat|fix|perf|refactor|style|test\\b\\(?[^\\)]*\\)?: .+|v[0-9]+\\.[0-9]+\\.[0-9]+)$"
           on-failed-regex-fail-action: true
           on-failed-regex-create-review: true
           on-failed-regex-request-changes: false
