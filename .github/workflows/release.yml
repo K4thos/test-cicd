@@ -1,6 +1,6 @@
-name: release
-
 on:
+  push:
+    branches: branches: [ master, main ]
   workflow_dispatch:
     inputs:
       tag:
@@ -9,17 +9,16 @@ on:
         required: false
         default: ''
       prerelease:
-        description: Whether the new release should be considered pre-release.
+        description: Select to flag the new release as a pre-release.
         type: boolean
         required: false
         default: false
-  push:
-    branches: [ "master", "main" ]
 
 permissions:
   checks: write
   contents: write
 
+name: release
 jobs:
   tag:
     name: prepare tag
@@ -40,7 +39,6 @@ jobs:
       - name: Bump version and push tag
         if: "${{ github.event.inputs.tag != '' }}"
         id: latestTag
-        # ${{ steps.latestTag.outputs.changelog }}
         uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -51,6 +49,7 @@ jobs:
           tag_prefix: ""
           # <keyword>:<release_type>:<changelog_section>
           # custom_release_rules: build:patch,chore:patch,docs:patch,feat:patch:Features,fix:patch:Bug Fixes,other:patch,perf:patch,refactor:patch,style:patch,test:patch
+          # ${{ steps.latestTag.outputs.changelog }}
 
       - name: Update CHANGELOG
         if: "${{ github.event.inputs.tag != '' }}"

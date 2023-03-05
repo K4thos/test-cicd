@@ -1,0 +1,17 @@
+changelog:
+  exclude:
+    labels:
+      - 'PR type: ignore-for-release'
+  categories:
+    - title: Breaking Changes 🛠
+      labels:
+        - 'PR type: breaking'
+    - title: New Features 🎉
+      labels:
+        - 'PR type: feat'
+    - title: Bug Fixes 🔧
+      labels:
+        - 'PR type: fix'
+    - title: Other Changes
+      labels:
+        - "*"
