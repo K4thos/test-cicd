@@ -6,7 +6,7 @@ on:
       tag:
         description: 'Tag for the new release'     
         required: true
-        default: 'v0.0.0'
+        default: ''
   push:
     branches: [ "master", "main" ]
 
@@ -32,7 +32,7 @@ jobs:
           semver_only: true
 
       - name: Bump version and push tag
-        if: "${{ github.event.inputs.tag != 'v0.0.0' }}"
+        if: "${{ github.event.inputs.tag != '' }}"
         id: latestTag
         # ${{ steps.latestTag.outputs.changelog }}
         uses: mathieudutour/github-tag-action@v6.1
@@ -47,7 +47,7 @@ jobs:
           # custom_release_rules: build:patch,chore:patch,docs:patch,feat:patch:Features,fix:patch:Bug Fixes,other:patch,perf:patch,refactor:patch,style:patch,test:patch
 
       - name: Update CHANGELOG
-        if: "${{ github.event.inputs.tag != 'v0.0.0' }}"
+        if: "${{ github.event.inputs.tag != '' }}"
         id: changelog
         uses: requarks/changelog-action@v1
         with:
@@ -128,7 +128,7 @@ jobs:
           cp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt deploy/ScreenpackLicense.txt
           echo "Zipping deploy directory"
           cd deploy
-          if [ "${{ github.event.inputs.tag }}" == "v0.0.0" ]; then
+          if [ "${{ github.event.inputs.tag }}" == "" ]; then
             ARTIFACT_NAME=Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
           else
             ARTIFACT_NAME=Ikemen_GO-${{ needs.tag.outputs.latestTag }}-${{ github.event.inputs.tag }}.zip
@@ -144,7 +144,7 @@ jobs:
         shell: bash
 
       - name: Update dev release
-        if: "${{ github.event.inputs.tag == 'v0.0.0' }}"
+        if: "${{ github.event.inputs.tag == '' }}"
         #uses: softprops/action-gh-release@v1
         uses: iTrooz/action-gh-release@test
         with:
@@ -159,7 +159,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
 
       - name: Create Release
-        if: "${{ github.event.inputs.tag != 'v0.0.0' }}"
+        if: "${{ github.event.inputs.tag != '' }}"
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.IKEMEN_TOKEN }}
