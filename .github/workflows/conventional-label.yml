@@ -28,5 +28,4 @@ jobs:
             "refactor": "PR type: refactor",
             "style": "PR type: style",
             "test": "PR type: test"}
-          ignored_types:
-            - chore
+          ignored_types: [ chore ]
