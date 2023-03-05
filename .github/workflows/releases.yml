@@ -102,7 +102,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
 
       - name: Conventional Changelog
-        uses: TriPSs/conventional-changelog-action@v3
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3.18.0
         with:
           github-token: ${{ secrets.IKEMEN_TOKEN }}
           git-message: 'chore(release): {version}'
