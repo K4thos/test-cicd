@@ -19,27 +19,36 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Get latest tag
-        id: toTag
+      - name: Get previous tag
+        id: previousTag
         uses: actions-ecosystem/action-get-latest-tag@v1
         with:
           semver_only: true
 
-      - name: Commit new tag
-        uses: tvdias/github-tagger@v0.0.2
+      #- name: Commit new tag
+      #  uses: tvdias/github-tagger@v0.0.2
+      #  with:
+      #    repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      #    tag: "${{ github.event.inputs.tag }}"
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          tag: "${{ github.event.inputs.tag }}"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: false
+          default_prerelease_bump: false
+          custom_tag: ${{ github.event.inputs.tag }}
+          create_annotated_tag: true
 
       - name: Get latest tag
-        id: fromTag
+        id: latestTag
         uses: actions-ecosystem/action-get-latest-tag@v1
         with:
           semver_only: true
 
       - name: Print tags
         run: |
-          echo "toTag: ${{ steps.toTag.outputs.tag }}"
+          echo "previousTag: ${{ steps.previousTag.outputs.tag }}"
           echo "fromTag: ${{ steps.fromTag.outputs.tag }}"
         shell: bash
 
@@ -48,8 +57,8 @@ jobs:
         uses: requarks/changelog-action@v1
         with:
           token: ${{ github.token }}
-          fromTag: ${{ steps.fromTag.outputs.tag }}
-          toTag: ${{ steps.toTag.outputs.tag }}
+          fromTag: ${{ steps.latestTag.outputs.tag }}
+          toTag: ${{ steps.previousTag.outputs.tag }}
           # tag: ${{ github.ref_name }}
           writeToFile: false
           excludeTypes: build,chore,docs,other,perf,refactor,style,test
