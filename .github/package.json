@@ -1,0 +1,22 @@
+{
+  "name": "Ikemen GO",
+  "version": "0.98.2",
+  "description": "An open-source fighting game engine that supports MUGEN resources.",
+  "keywords": [
+    "ikemen",
+    "mugen",
+    "engine",
+    "clone",
+    "golang",
+    "go"
+  ],
+  "homepage": "https://ikemen-engine.github.io",
+  "bugs": {
+    "url": "https://github.com/ikemen-engine/Ikemen-GO/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ikemen-engine/Ikemen-GO.git"
+  },
+  "license": "MIT",
+}
