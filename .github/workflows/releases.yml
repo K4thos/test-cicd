@@ -106,7 +106,7 @@ jobs:
           omitName: false
           omitNameDuringUpdate: true
           omitPrereleaseDuringUpdate: true
-          prerelease: true
+          prerelease: false
           removeArtifacts: false
           replacesArtifacts: true
           skipIfReleaseExists: false
