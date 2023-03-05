@@ -102,7 +102,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
 
       - name: Conventional Changelog Action
-        if: github.ref_type == "tag"
         uses: TriPSs/conventional-changelog-action@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
