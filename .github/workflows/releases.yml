@@ -98,7 +98,7 @@ jobs:
         with:
           #files: '${{ github.workspace }}\Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip'
           #files: /d/a/test-cicd/test-cicd/Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
-          files: 'D:\a\test-cicd\test-cicd\Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip'
+          files: './Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip'
           tag_name: nightly
           fail_on_unmatched_files: true
           generate_release_notes: true
@@ -113,7 +113,7 @@ jobs:
         #uses: softprops/action-gh-release@v1
         uses: iTrooz/action-gh-release@test
         with:
-          files: ${{ github.workspace }}/Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
+          files: ./Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
           tag_name: nightly
           fail_on_unmatched_files: true
           generate_release_notes: true
