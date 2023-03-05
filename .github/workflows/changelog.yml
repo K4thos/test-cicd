@@ -13,21 +13,33 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Get latest tag
+        id: tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        with:
+          semver_only: true
+          initial_version: v0.0.0
+          with_initial_version: true
+
       - name: Update CHANGELOG
         id: changelog
-        uses: requarks/changelog-action@v1.6.0
+        uses: requarks/changelog-action@v1
         with:
           token: ${{ github.token }}
-          tag: ${{ github.ref_name }}
+          fromTag: ${{ github.ref_name }}
+          toTag: ${{ steps.tag.outputs.tag }}
+          writeToFile: false
+          excludeTypes: build,chore,docs,other,perf,refactor,style,test
+          includeInvalidCommits: false
 
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
+          token: ${{ github.token }}
           allowUpdates: true
           draft: false
           name: ${{ github.ref_name }}
           body: ${{ steps.changelog.outputs.changes }}
-          token: ${{ github.token }}
 
       #- name: Commit CHANGELOG.md
       #  uses: stefanzweifel/git-auto-commit-action@v4
