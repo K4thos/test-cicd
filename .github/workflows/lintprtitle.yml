@@ -13,7 +13,7 @@ jobs:
       - uses: morrisoncole/pr-lint-action@v1.7.0
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          title-regex: "\\bbuild|ci|docs|feat|fix|perf|refactor|style|test\\b: .+$"
+          title-regex: "\\bbuild|ci|docs|feat|fix|perf|refactor|style|test\\b\\(?[^\\)]*\\)?: .+$"
           on-failed-regex-fail-action: true
           on-failed-regex-create-review: true
           on-failed-regex-request-changes: false
@@ -21,7 +21,7 @@ jobs:
             Don't worry, if you can't fix the problem with the PR title, a person who takes care of things will handle it.
             
             We use precise git commit title formatting for readable messages and to generate auto releases and change log:
-            `<type>: <description>`
+            `<type>(<scope>): <description>`
             where `<type>` must be one of the following: 
             - build: Changes that affect the build system or external dependencies
             - ci: Changes to our CI configuration files and scripts
@@ -32,5 +32,6 @@ jobs:
             - refactor: A code change that neither fixes a bug nor adds a feature
             - style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
             - test: Adding missing tests or correcting existing tests
+            `(<scope>)` declaration is optional and can be omitted.
           on-succeeded-regex-dismiss-review-comment: |
             PR title matches our git commit title formatting guidelines. All good!
