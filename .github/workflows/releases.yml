@@ -101,7 +101,7 @@ jobs:
           makeLatest: false
           name: nightly
           omitBody: false
-          omitBodyDuringUpdate: true
+          omitBodyDuringUpdate: false
           omitDraftDuringUpdate: true
           omitName: false
           omitNameDuringUpdate: true
