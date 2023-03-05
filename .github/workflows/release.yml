@@ -23,6 +23,8 @@ jobs:
       latestTag: ${{ steps.latestTag.outputs }}
       changelog: ${{ steps.changelog.outputs }}
     steps:
+      - uses: actions/checkout@v3
+
       - name: Get previous tag
         if: "${{ github.event.inputs.tag != 'v0.0.0' }}"
         id: previousTag
