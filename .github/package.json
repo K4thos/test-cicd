@@ -15,8 +15,7 @@
     "url": "https://github.com/ikemen-engine/Ikemen-GO/issues"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ikemen-engine/Ikemen-GO.git"
+    "url": "https://github.com/ikemen-engine/Ikemen-GO.git"
   },
-  "license": "MIT",
+  "license": "MIT"
 }
