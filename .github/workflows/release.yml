@@ -2,6 +2,11 @@ name: release
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag for the new release'     
+        required: true
+        default: 'v0.0.0'
   push:
     branches: [ "master", "main" ]
 
@@ -78,47 +83,27 @@ jobs:
           cp Ikemen_GO-Elecbyte-Screenpack/LICENCE.txt deploy/ScreenpackLicense.txt
           echo "Zipping deploy directory"
           cd deploy
+          if [ "${{ github.event.inputs.tag }}" == "v0.0.0" ]; then
+            ARTIFACT_NAME=Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
+          else
+            ARTIFACT_NAME=Ikemen_GO-${{ steps.latestTag.outputs.new_tag }}-${{ github.event.inputs.tag }}.zip
+            echo $ARTIFACT_NAME > external/script/version
+          fi
           if [ "$RUNNER_OS" == "Windows" ]; then
-            "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
+            "/c/Program Files/7-Zip/7z.exe" a ../$ARTIFACT_NAME *
           else
             cp ../build/Ikemen_GO.command .
-            zip -r ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
+            zip -r ../$ARTIFACT_NAME *
           fi
           echo "Successfully prepared assets for deployment"
         shell: bash
 
-      # - name: Update dev release
-      #   uses: ncipollo/release-action@v1
-      #   with:
-      #     token: ${{ github.token }}
-      #     allowUpdates: true
-      #     artifactErrorsFailBuild: true
-      #     artifacts: "Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip"
-      #     body: |
-      #       The nightly release, or more precisely, the latest development version, is generated after each commit and always represents the most up-to-date iteration of the source code. It features the newest development version of the engine and screenpack files, making it ready for testing straightaway. Using it can eliminate the need to compile the source code for the latest, cutting-edge updates. However, as a consequence, it may sometimes contain regressions that were not yet discovered and/or outpace the documentation that corresponds to stable releases with version numbers like v x.x.x.
-      #     discussionCategory: ""
-      #     draft: false
-      #     generateReleaseNotes: false
-      #     makeLatest: false
-      #     name: nightly
-      #     omitBody: false
-      #     omitBodyDuringUpdate: false
-      #     omitDraftDuringUpdate: true
-      #     omitName: false
-      #     omitNameDuringUpdate: true
-      #     omitPrereleaseDuringUpdate: true
-      #     prerelease: true
-      #     removeArtifacts: false
-      #     replacesArtifacts: true
-      #     skipIfReleaseExists: false
-      #     tag: nightly
-      #     updateOnlyUnreleased: false
-
       - name: Update dev release
+        if: "${{ github.event.inputs.tag == 'v0.0.0' }}"
         #uses: softprops/action-gh-release@v1
         uses: iTrooz/action-gh-release@test
         with:
-          files: ./Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
+          files: ./${{ ARTIFACT_NAME }}
           tag_name: nightly
           fail_on_unmatched_files: true
           generate_release_notes: true
@@ -127,3 +112,66 @@ jobs:
             The nightly release, or more precisely, the latest development version, is generated after each commit and always represents the most up-to-date iteration of the source code. It features the newest development version of the engine and screenpack files, making it ready for testing straightaway. Using it can eliminate the need to compile the source code for the latest, cutting-edge updates. However, as a consequence, it may sometimes contain regressions that were not yet discovered and/or outpace the documentation that corresponds to stable releases with version numbers like v x.x.x.
         env:
           GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
+
+      - name: Get previous tag
+        if: "${{ github.event.inputs.tag != 'v0.0.0' }}"
+        id: previousTag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        with:
+          semver_only: true
+
+      - name: Bump version and push tag
+        if: "${{ github.event.inputs.tag != 'v0.0.0' }}"
+        id: latestTag
+        # ${{ steps.latestTag.outputs.changelog }}
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: false
+          default_prerelease_bump: false
+          custom_tag: ${{ github.event.inputs.tag }}
+          create_annotated_tag: false
+          tag_prefix: ""
+          # <keyword>:<release_type>:<changelog_section>
+          # custom_release_rules: build:patch,chore:patch,docs:patch,feat:patch:Features,fix:patch:Bug Fixes,other:patch,perf:patch,refactor:patch,style:patch,test:patch
+
+      - name: Update CHANGELOG
+        if: "${{ github.event.inputs.tag != 'v0.0.0' }}"
+        id: changelog
+        uses: requarks/changelog-action@v1
+        with:
+          token: ${{ github.token }}
+          fromTag: ${{ steps.latestTag.outputs.new_tag }}
+          toTag: ${{ steps.previousTag.outputs.tag }}
+          # tag: ${{ github.ref_name }}
+          writeToFile: false
+          excludeTypes: build,chore,docs,other,perf,refactor,style,test
+          includeInvalidCommits: false
+
+      - name: Create Release
+        if: "${{ github.event.inputs.tag != 'v0.0.0' }}"
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.IKEMEN_TOKEN }}
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          artifacts: "${{ ARTIFACT_NAME }}"
+          body: |
+            ${{ steps.changelog.outputs.changes }}
+          discussionCategory: ""
+          draft: false
+          generateReleaseNotes: false
+          makeLatest: false
+          name: ${{ steps.latestTag.outputs.new_tag }}
+          omitBody: false
+          omitBodyDuringUpdate: false
+          omitDraftDuringUpdate: true
+          omitName: false
+          omitNameDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
+          prerelease: true
+          removeArtifacts: false
+          replacesArtifacts: true
+          skipIfReleaseExists: false
+          tag: ${{ steps.latestTag.outputs.new_tag }}
+          updateOnlyUnreleased: false
