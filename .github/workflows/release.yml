@@ -131,7 +131,7 @@ jobs:
           if [ "${{ github.event.inputs.tag }}" == "v0.0.0" ]; then
             ARTIFACT_NAME=Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
           else
-            ARTIFACT_NAME=Ikemen_GO-${{ jobs.tag.outputs.latestTag }}-${{ github.event.inputs.tag }}.zip
+            ARTIFACT_NAME=Ikemen_GO-${{ needs.tag.outputs.latestTag }}-${{ github.event.inputs.tag }}.zip
             echo $ARTIFACT_NAME > external/script/version
           fi
           if [ "$RUNNER_OS" == "Windows" ]; then
@@ -167,12 +167,12 @@ jobs:
           artifactErrorsFailBuild: true
           artifacts: "${{ env.ARTIFACT_NAME }}"
           body: |
-            ${{ jobs.tag.outputs.changelog }}
+            ${{ needs.tag.outputs.changelog }}
           discussionCategory: ""
           draft: false
           generateReleaseNotes: false
           makeLatest: false
-          name: ${{ jobs.tag.outputs.latestTag }}
+          name: ${{ needs.tag.outputs.latestTag }}
           omitBody: false
           omitBodyDuringUpdate: false
           omitDraftDuringUpdate: true
@@ -183,5 +183,5 @@ jobs:
           removeArtifacts: false
           replacesArtifacts: true
           skipIfReleaseExists: false
-          tag: ${{ jobs.tag.outputs.latestTag }}
+          tag: ${{ needs.tag.outputs.latestTag }}
           updateOnlyUnreleased: false
