@@ -25,40 +25,29 @@ jobs:
         with:
           semver_only: true
 
-      #- name: Commit new tag
-      #  uses: tvdias/github-tagger@v0.0.2
-      #  with:
-      #    repo-token: "${{ secrets.GITHUB_TOKEN }}"
-      #    tag: "${{ github.event.inputs.tag }}"
       - name: Bump version and push tag
-        id: tag_version
+        id: latestTag
         uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
           default_prerelease_bump: false
           custom_tag: ${{ github.event.inputs.tag }}
-          create_annotated_tag: true
+          create_annotated_tag: false
           tag_prefix: ""
 
-      - name: Get latest tag
-        id: latestTag
-        uses: actions-ecosystem/action-get-latest-tag@v1
-        with:
-          semver_only: true
-
-      - name: Print tags
-        run: |
-          echo "previousTag: ${{ steps.previousTag.outputs.tag }}"
-          echo "latestTag: ${{ steps.latestTag.outputs.tag }}"
-        shell: bash
+      #- name: Get latest tag
+      #  id: latestTag
+      #  uses: actions-ecosystem/action-get-latest-tag@v1
+      #  with:
+      #    semver_only: true
 
       - name: Update CHANGELOG
         id: changelog
         uses: requarks/changelog-action@v1
         with:
           token: ${{ github.token }}
-          fromTag: ${{ steps.latestTag.outputs.tag }}
+          fromTag: ${{ steps.latestTag.outputs.new_tag }}
           toTag: ${{ steps.previousTag.outputs.tag }}
           # tag: ${{ github.ref_name }}
           writeToFile: false
@@ -71,8 +60,11 @@ jobs:
           token: ${{ github.token }}
           allowUpdates: true
           draft: false
-          name: ${{ github.ref_name }}
-          body: ${{ steps.changelog.outputs.changes }}
+          name: ${{ steps.latestTag.outputs.new_tag }}
+          body: |
+            ${{ steps.changelog.outputs.changes }}
+            -----------------
+            ${{ steps.latestTag.outputs.changelog }}
 
       #- name: Commit CHANGELOG.md
       #  uses: stefanzweifel/git-auto-commit-action@v4
