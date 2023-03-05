@@ -13,21 +13,22 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Get latest tag
-        id: tag
-        uses: actions-ecosystem/action-get-latest-tag@v1
-        with:
-          semver_only: true
-          initial_version: v0.0.0
-          with_initial_version: true
+      # - name: Get latest tag
+      #   id: tag
+      #   uses: actions-ecosystem/action-get-latest-tag@v1
+      #   with:
+      #     semver_only: true
+      #     initial_version: v0.0.0
+      #     with_initial_version: true
 
       - name: Update CHANGELOG
         id: changelog
         uses: requarks/changelog-action@v1
         with:
           token: ${{ github.token }}
-          fromTag: ${{ github.ref_name }}
-          toTag: ${{ steps.tag.outputs.tag }}
+          # fromTag: ${{ github.ref_name }}
+          # toTag: ${{ steps.tag.outputs.tag }}
+          tag: ${{ github.ref_name }}
           writeToFile: false
           excludeTypes: build,chore,docs,other,perf,refactor,style,test
           includeInvalidCommits: false
