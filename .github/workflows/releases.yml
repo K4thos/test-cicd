@@ -107,3 +107,5 @@ jobs:
         with:
           github-token: ${{ secrets.IKEMEN_TOKEN }}
           version-file: '.github/package.json'
+          skip-git-pull: 'true'
+          skip-commit: 'true'
