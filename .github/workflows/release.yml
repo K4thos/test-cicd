@@ -16,18 +16,16 @@ permissions:
 
 jobs:
   tag:
-    if: "${{ github.event.inputs.tag != 'v0.0.0' }}"
     name: prepare tag
     runs-on: ubuntu-latest
     outputs:
-      previousTag: ${{ steps.previousTag.outputs }}
-      latestTag: ${{ steps.latestTag.outputs }}
-      changelog: ${{ steps.changelog.outputs }}
+      previousTag: ${{ steps.previousTag.outputs.tag }}
+      latestTag: ${{ steps.latestTag.outputs.new_tag }}
+      changelog: ${{ steps.changelog.outputs.changes }}
     steps:
       - uses: actions/checkout@v3
 
       - name: Get previous tag
-        if: "${{ github.event.inputs.tag != 'v0.0.0' }}"
         id: previousTag
         uses: actions-ecosystem/action-get-latest-tag@v1
         with:
@@ -63,6 +61,7 @@ jobs:
 
   build:
     name: prepare release
+    needs: tag
     strategy:
       matrix:
         cfg:
@@ -132,7 +131,7 @@ jobs:
           if [ "${{ github.event.inputs.tag }}" == "v0.0.0" ]; then
             ARTIFACT_NAME=Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
           else
-            ARTIFACT_NAME=Ikemen_GO-${{ needs.tag.outputs.latestTag.new_tag }}-${{ github.event.inputs.tag }}.zip
+            ARTIFACT_NAME=Ikemen_GO-${{ jobs.tag.outputs.latestTag }}-${{ github.event.inputs.tag }}.zip
             echo $ARTIFACT_NAME > external/script/version
           fi
           if [ "$RUNNER_OS" == "Windows" ]; then
@@ -168,12 +167,12 @@ jobs:
           artifactErrorsFailBuild: true
           artifacts: "${{ env.ARTIFACT_NAME }}"
           body: |
-            ${{ needs.tag.outputs.changelog.changes }}
+            ${{ jobs.tag.outputs.changelog }}
           discussionCategory: ""
           draft: false
           generateReleaseNotes: false
           makeLatest: false
-          name: ${{ needs.tag.outputs.latestTag.new_tag }}
+          name: ${{ jobs.tag.outputs.latestTag }}
           omitBody: false
           omitBodyDuringUpdate: false
           omitDraftDuringUpdate: true
@@ -184,5 +183,5 @@ jobs:
           removeArtifacts: false
           replacesArtifacts: true
           skipIfReleaseExists: false
-          tag: ${{ needs.tag.outputs.latestTag.new_tag }}
+          tag: ${{ jobs.tag.outputs.latestTag }}
           updateOnlyUnreleased: false
