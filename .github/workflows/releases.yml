@@ -80,36 +80,14 @@ jobs:
           cd deploy
           if [ "$RUNNER_OS" == "Windows" ]; then
             "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
-            pwd
-            echo '${{ github.workspace }}'
-            cd ..
-            dir
-            pwd
           else
             cp ../build/Ikemen_GO.command .
             zip -r ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
           fi
+          echo "Successfully prepared assets for deployment"
         shell: bash
 
-      - name: Update dev release (Windows)
-        if: matrix.cfg.runner_os == 'windows'
-        #uses: softprops/action-gh-release@v1
-        uses: iTrooz/action-gh-release@test
-        with:
-          #files: '${{ github.workspace }}\Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip'
-          #files: /d/a/test-cicd/test-cicd/Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
-          files: './Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip'
-          tag_name: nightly
-          fail_on_unmatched_files: true
-          generate_release_notes: true
-          update_tag: true
-          #body: |
-          #  Nightly build
-        env:
-          GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
-      
-      - name: Update dev release (Linux/macOs)
-        if: matrix.cfg.runner_os != 'windows'
+      - name: Update dev release
         #uses: softprops/action-gh-release@v1
         uses: iTrooz/action-gh-release@test
         with:
@@ -122,3 +100,23 @@ jobs:
           #  Nightly build
         env:
           GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
+
+      - name: Conventional Changelog Action
+        if: github.ref_type == "tag"
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          git-message: 'chore(release): {version}'
+          git-user-name: 'Changelog Action'
+          git-user-email: 'conventional.changelog.action@github.com'
+          git-branch: '${{ github.ref }}'
+          preset: 'angular'
+          tag-prefix: 'v'
+          output-file: 'CHANGELOG.md'
+          release-count: '0'
+          version-file: './package.json' // or .yml, .yaml, .toml
+          version-path: 'version'
+          skip-on-empty: 'false'
+          skip-version-file: 'false'
+          skip-commit: 'false'
+          pre-release-identifier: 'rc'
