@@ -38,7 +38,7 @@ jobs:
           default_bump: false
           default_prerelease_bump: false
           custom_tag: ${{ github.event.inputs.tag }}
-          create_annotated_tag: true
+          create_annotated_tag: false
 
       - name: Get latest tag
         id: latestTag
@@ -49,7 +49,7 @@ jobs:
       - name: Print tags
         run: |
           echo "previousTag: ${{ steps.previousTag.outputs.tag }}"
-          echo "fromTag: ${{ steps.fromTag.outputs.tag }}"
+          echo "latestTag: ${{ steps.latestTag.outputs.tag }}"
         shell: bash
 
       - name: Update CHANGELOG
