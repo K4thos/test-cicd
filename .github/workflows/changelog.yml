@@ -35,12 +35,18 @@ jobs:
           custom_tag: ${{ github.event.inputs.tag }}
           create_annotated_tag: false
           tag_prefix: ""
-
-      #- name: Get latest tag
-      #  id: latestTag
-      #  uses: actions-ecosystem/action-get-latest-tag@v1
-      #  with:
-      #    semver_only: true
+          # <keyword>:<release_type>:<changelog_section>
+          custom_release_rules: >
+            build:patch:,
+            chore:patch:,
+            docs:patch:,
+            feat:patch:New Features,
+            fix:patch:Bug Fixes,
+            other:patch:,
+            perf:patch:,
+            refactor:patch:,
+            style:patch:,
+            test:patch:
 
       - name: Update CHANGELOG
         id: changelog
