@@ -4,9 +4,15 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag for the new release. Leave empty to only update nightly build.'     
+        description: Tag for the new release. Leave empty to only update nightly build. 
+        type: string
         required: false
         default: ''
+      prerelease:
+        description: Whether the new release should be considered pre-release.
+        type: boolean
+        required: false
+        default: false
   push:
     branches: [ "master", "main" ]
 
@@ -133,7 +139,7 @@ jobs:
             ARTIFACT_NAME=Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip         
             echo "artifact=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
           else
-            ARTIFACT_NAME=Ikemen_GO-${{ needs.tag.outputs.latestTag }}-${{ github.event.inputs.tag }}.zip
+            ARTIFACT_NAME=Ikemen_GO-${{ needs.tag.outputs.latestTag }}-${{ matrix.cfg.runner_os }}.zip
             echo "artifact=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
             echo "${{ needs.tag.outputs.latestTag }}" > external/script/version
           fi
@@ -144,12 +150,7 @@ jobs:
             zip -r ../$ARTIFACT_NAME *
           fi
           echo "Successfully prepared assets for deployment"
-          echo $ARTIFACT_NAME
         shell: bash
-
-      - name: Print
-        run: |
-          echo ${{ steps.artifacts.outputs.artifact }}
 
       - name: Update dev release
         if: "${{ github.event.inputs.tag == '' }}"
@@ -187,7 +188,7 @@ jobs:
           omitName: false
           omitNameDuringUpdate: true
           omitPrereleaseDuringUpdate: true
-          prerelease: true
+          prerelease: ${{ github.event.inputs.prerelease }}
           removeArtifacts: false
           replacesArtifacts: true
           skipIfReleaseExists: false
