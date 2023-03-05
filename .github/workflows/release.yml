@@ -130,26 +130,33 @@ jobs:
           echo "Zipping deploy directory"
           cd deploy
           if [ "${{ github.event.inputs.tag }}" == "" ]; then
-            echo "ARTIFACT=Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip" >> "$GITHUB_OUTPUT"
+            ARTIFACT_NAME=Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip         
+            echo "artifact=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
           else
-            echo "ARTIFACT=Ikemen_GO-${{ needs.tag.outputs.latestTag }}-${{ github.event.inputs.tag }}.zip" >> "$GITHUB_OUTPUT"
+            ARTIFACT_NAME=Ikemen_GO-${{ needs.tag.outputs.latestTag }}-${{ github.event.inputs.tag }}.zip
+            echo "artifact=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
             echo "${{ needs.tag.outputs.latestTag }}" > external/script/version
           fi
           if [ "$RUNNER_OS" == "Windows" ]; then
-            "/c/Program Files/7-Zip/7z.exe" a ../${{ steps.artifacts.outputs.ARTIFACT }} *
+            "/c/Program Files/7-Zip/7z.exe" a ../$ARTIFACT_NAME *
           else
             cp ../build/Ikemen_GO.command .
-            zip -r ../${{ steps.artifacts.outputs.ARTIFACT }} *
+            zip -r ../$ARTIFACT_NAME *
           fi
           echo "Successfully prepared assets for deployment"
+          echo $ARTIFACT_NAME
         shell: bash
+
+      - name: Print
+        run: |
+          echo ${{ steps.artifacts.outputs.artifact }}
 
       - name: Update dev release
         if: "${{ github.event.inputs.tag == '' }}"
         #uses: softprops/action-gh-release@v1
         uses: iTrooz/action-gh-release@test
         with:
-          files: ./${{ steps.artifacts.outputs.ARTIFACT }}
+          files: ./${{ steps.artifacts.outputs.artifact }}
           tag_name: nightly
           fail_on_unmatched_files: true
           generate_release_notes: true
@@ -166,7 +173,7 @@ jobs:
           token: ${{ secrets.IKEMEN_TOKEN }}
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: "${{ steps.artifacts.outputs.ARTIFACT }}"
+          artifacts: "${{ steps.artifacts.outputs.artifact }}"
           body: |
             ${{ needs.tag.outputs.changelog }}
           discussionCategory: ""
