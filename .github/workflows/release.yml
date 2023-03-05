@@ -16,6 +16,7 @@ permissions:
 
 jobs:
   tag:
+    if: "${{ github.event.inputs.tag != 'v0.0.0' }}"
     name: prepare tag
     runs-on: ubuntu-latest
     outputs:
