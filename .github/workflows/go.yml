@@ -1,10 +1,11 @@
-name: Go
+name: go
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
+  #pull_request:
+  # branches: [ "master", "main" ]
 
 permissions:
   checks: write
@@ -12,6 +13,7 @@ permissions:
 
 jobs:
   build:
+    name: prepare dev release
     strategy:
       matrix:
         cfg:
@@ -88,7 +90,7 @@ jobs:
         shell: bash
 
       - name: Update dev release (Windows)
-        if: matrix.cfg.runner_os == 'windows'
+        if: matrix.cfg.runner_os == "windows"
         #uses: softprops/action-gh-release@v1
         uses: iTrooz/action-gh-release@test
         with:
@@ -103,7 +105,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.IKEMEN_TOKEN }}
       
       - name: Update dev release (Linux/macOs)
-        if: matrix.cfg.runner_os != 'windows'
+        if: matrix.cfg.runner_os != "windows"
         #uses: softprops/action-gh-release@v1
         uses: iTrooz/action-gh-release@test
         with:
