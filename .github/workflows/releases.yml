@@ -80,6 +80,8 @@ jobs:
           cd deploy
           if [ "$RUNNER_OS" == "Windows" ]; then
             "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
+            pwd
+            echo '${{ github.workspace }}'
             cd D:/
             dir /s /b /o:gn
           else
