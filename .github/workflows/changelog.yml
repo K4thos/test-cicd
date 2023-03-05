@@ -60,6 +60,7 @@ jobs:
           token: ${{ github.token }}
           allowUpdates: true
           draft: false
+          tag: ${{ steps.latestTag.outputs.new_tag }}
           name: ${{ steps.latestTag.outputs.new_tag }}
           body: |
             ${{ steps.changelog.outputs.changes }}
