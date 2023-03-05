@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag for the new release'     
-        required: true
+        description: 'Tag for the new release. Leave empty to only update nightly build.'     
+        required: false
         default: ''
   push:
     branches: [ "master", "main" ]
@@ -118,6 +118,7 @@ jobs:
           #CCX: ${{ matrix.cfg.cxx }}
 
       - name: Prepare artifacts
+        id: artifacts
         run: |
           echo "Preparing files for deployment"
           mkdir deploy
@@ -129,16 +130,16 @@ jobs:
           echo "Zipping deploy directory"
           cd deploy
           if [ "${{ github.event.inputs.tag }}" == "" ]; then
-            ARTIFACT_NAME=Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip
+            echo "ARTIFACT=Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip" >> "$GITHUB_OUTPUT"
           else
-            ARTIFACT_NAME=Ikemen_GO-${{ needs.tag.outputs.latestTag }}-${{ github.event.inputs.tag }}.zip
-            echo $ARTIFACT_NAME > external/script/version
+            echo "ARTIFACT=Ikemen_GO-${{ needs.tag.outputs.latestTag }}-${{ github.event.inputs.tag }}.zip" >> "$GITHUB_OUTPUT"
+            echo "${{ needs.tag.outputs.latestTag }}" > external/script/version
           fi
           if [ "$RUNNER_OS" == "Windows" ]; then
-            "/c/Program Files/7-Zip/7z.exe" a ../$ARTIFACT_NAME *
+            "/c/Program Files/7-Zip/7z.exe" a ../${{ steps.artifacts.outputs.ARTIFACT }} *
           else
             cp ../build/Ikemen_GO.command .
-            zip -r ../$ARTIFACT_NAME *
+            zip -r ../${{ steps.artifacts.outputs.ARTIFACT }} *
           fi
           echo "Successfully prepared assets for deployment"
         shell: bash
@@ -148,7 +149,7 @@ jobs:
         #uses: softprops/action-gh-release@v1
         uses: iTrooz/action-gh-release@test
         with:
-          files: ./${{ env.ARTIFACT_NAME }}
+          files: ./${{ steps.artifacts.outputs.ARTIFACT }}
           tag_name: nightly
           fail_on_unmatched_files: true
           generate_release_notes: true
@@ -165,7 +166,7 @@ jobs:
           token: ${{ secrets.IKEMEN_TOKEN }}
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: "${{ env.ARTIFACT_NAME }}"
+          artifacts: "${{ steps.artifacts.outputs.ARTIFACT }}"
           body: |
             ${{ needs.tag.outputs.changelog }}
           discussionCategory: ""
