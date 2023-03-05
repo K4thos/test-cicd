@@ -107,7 +107,7 @@ jobs:
           omitNameDuringUpdate: true
           omitPrereleaseDuringUpdate: true
           prerelease: true
-          removeArtifacts: true
+          removeArtifacts: false
           replacesArtifacts: true
           skipIfReleaseExists: false
           tag: nightly
