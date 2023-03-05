@@ -82,8 +82,9 @@ jobs:
             "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
             pwd
             echo '${{ github.workspace }}'
-            cd D:/
-            dir /s /b /o:gn
+            cd ..
+            dir
+            pwd
           else
             cp ../build/Ikemen_GO.command .
             zip -r ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
