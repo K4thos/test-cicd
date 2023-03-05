@@ -1,11 +1,11 @@
-name: go
+name: nightly
 
 on:
   workflow_dispatch:
   push:
     branches: [ "master", "main" ]
-  #pull_request:
-  # branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
 
 permissions:
   checks: write
