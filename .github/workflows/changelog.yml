@@ -34,6 +34,12 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           tag: "${{ github.event.inputs.tag }}"
 
+      - name: Print tags
+        run: |
+          echo "toTag: ${{ steps.toTag.outputs.tag }}"
+          echo "fromTag: ${{ steps.fromTag.outputs.tag }}"
+        shell: bash
+
       - name: Update CHANGELOG
         id: changelog
         uses: requarks/changelog-action@v1
