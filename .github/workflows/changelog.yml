@@ -36,17 +36,7 @@ jobs:
           create_annotated_tag: false
           tag_prefix: ""
           # <keyword>:<release_type>:<changelog_section>
-          custom_release_rules: >
-            build:patch,
-            chore:patch,
-            docs:patch,
-            feat:patch:New Features,
-            fix:patch:Bug Fixes,
-            other:patch,
-            perf:patch,
-            refactor:patch,
-            style:patch,
-            test:patch
+          custom_release_rules: build:patch,chore:patch,docs:patch,feat:patch:New Features,fix:patch:Bug Fixes,other:patch,perf:patch,refactor:patch,style:patch,test:patch
 
       - name: Update CHANGELOG
         id: changelog
