@@ -38,7 +38,8 @@ jobs:
           default_bump: false
           default_prerelease_bump: false
           custom_tag: ${{ github.event.inputs.tag }}
-          create_annotated_tag: false
+          create_annotated_tag: true
+          tag_prefix: ""
 
       - name: Get latest tag
         id: latestTag
