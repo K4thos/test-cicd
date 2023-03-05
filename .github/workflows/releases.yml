@@ -69,6 +69,8 @@ jobs:
 
       - name: Prepare artifacts
         run: |
+          pwd
+          echo ${{ github.workspace }}
           echo "Preparing files for deployment"
           mkdir deploy
           cp ${{ matrix.cfg.bin }} deploy/
@@ -79,7 +81,7 @@ jobs:
           echo "Zipping deploy directory"
           cd deploy
           if [ "$RUNNER_OS" == "Windows" ]; then
-            "/c/Program Files/7-Zip/7z.exe" a ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
+            "/c/Program Files/7-Zip/7z.exe" a ${{ github.workspace }}\Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
           else
             cp ../build/Ikemen_GO.command .
             zip -r ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
