@@ -84,7 +84,7 @@ jobs:
             cp ../build/Ikemen_GO.command .
             zip -r ../Ikemen_GO-dev-${{ matrix.cfg.runner_os }}.zip *
           fi
-          echo ${{ github.workspace }}
+          echo "workspace: ${{ github.workspace }}"
           pwd
           echo "Successfully prepared assets for deployment"
         shell: bash
