@@ -101,13 +101,13 @@ jobs:
           makeLatest: false
           name: nightly
           omitBody: false
-          omitBodyDuringUpdate: true
+          omitBodyDuringUpdate: false
           omitDraftDuringUpdate: true
           omitName: false
           omitNameDuringUpdate: true
           omitPrereleaseDuringUpdate: true
           prerelease: true
-          removeArtifacts: true
+          removeArtifacts: false
           replacesArtifacts: true
           skipIfReleaseExists: false
           tag: nightly
