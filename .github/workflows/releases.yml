@@ -106,32 +106,4 @@ jobs:
         uses: TriPSs/conventional-changelog-action@v3.18.0
         with:
           github-token: ${{ secrets.IKEMEN_TOKEN }}
-          git-message: 'chore(release): {version}'
-          git-user-name: 'Conventional Changelog Action'
-          git-user-email: 'conventional.changelog.action@github.com'
-          git-pull-method: '--ff-only'
-          git-push: 'true'
-          git-branch: 'releases'
-          git-url: 'github.com'
-          git-path: ''
-          preset: 'angular'
-          tag-prefix: 'v'
-          output-file: 'CHANGELOG.md'
-          release-count: '0'
           version-file: '.github/package.json'
-          version-path: 'version'
-          skip-git-pull: 'false'
-          skip-on-empty: 'false'
-          skip-version-file: 'false'
-          skip-commit: 'false'
-          skip-tag: 'false'
-          pre-commit: ''
-          fallback-version: '0.1.0'
-          config-file-path: ''
-          pre-changelog-generation: ''
-          skip-ci: 'true'
-          create-summary: 'true'
-          pre-release: 'false'
-          pre-release-identifier: 'rc'
-          
-
