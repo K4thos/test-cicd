@@ -20,8 +20,8 @@ jobs:
           on-failed-regex-comment: |
             Don't worry, if you can't fix the problem with the PR title, a person who takes care of things will handle it.
             
-            We use precise git commit title formatting for readable messages and to generate auto releases and change log:
-            `<type>(<scope>): <description>`
+            We use Conventional Commits specification for adding human and machine readable meaning to commit messages.
+            The expected PR title formatting: `<type>(<scope>): <description>`
             where `(<scope>)` declaration is optional and `<type>` must be one of the following: 
             - build: Changes that affect the build system or external dependencies
             - ci: Changes to our CI configuration files and scripts
