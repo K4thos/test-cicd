@@ -1,17 +1,24 @@
 changelog:
   exclude:
     labels:
-      - 'PR type: ignore-for-release'
+      - 'PR: build'
+      - 'PR: chore'
+      - 'PR: docs'
+      - 'PR: other'
+      - 'PR: perf'
+      - 'PR: refactor'
+      - 'PR: style'
+      - 'PR: test'
   categories:
     - title: Breaking Changes 🛠
       labels:
-        - 'PR type: breaking'
+        - 'PR: breaking'
     - title: New Features 🎉
       labels:
-        - 'PR type: feat'
+        - 'PR: feat'
     - title: Bug Fixes 🔧
       labels:
-        - 'PR type: fix'
-    - title: Other Changes
-      labels:
-        - "*"
+        - 'PR: fix'
+    #- title: Other Changes
+    #  labels:
+    #    - "*"
