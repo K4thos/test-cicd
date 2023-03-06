@@ -1,6 +1,6 @@
 on:
   push:
-    branches: branches: [ master, main ]
+    branches: [ master, main ]
   workflow_dispatch:
     inputs:
       tag:
@@ -18,7 +18,7 @@ permissions:
   checks: write
   contents: write
 
-name: release
+name: releases
 jobs:
   tag:
     name: prepare tag
