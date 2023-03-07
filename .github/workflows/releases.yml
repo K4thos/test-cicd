@@ -4,22 +4,27 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag for the new release. Leave empty to only update nightly build.'
+        description: 'Tag for the new release. Leave empty to only update the nightly build.'
         type: string
         required: false
         default: ''
       prerelease:
-        description: 'Set as a pre-release. (default: false, unused by nightly build)'
+        description: 'Set as a pre-release. (unused by the nightly build)'
         type: boolean
         required: false
         default: false
       makeLatest:
-        description: 'Set as the latest release. (default: true, unused by nightly build)'
+        description: 'Set as the latest release. (unused by nightly build)'
         type: boolean
         required: false
         default: true
+      draft:
+        description: 'Set as a draft release. (unused by the nightly build)'
+        type: boolean
+        required: false
+        default: false
       discussionCategory:
-        description: 'Set as the latest release, e.g. Announcements. (default: empty, no discussion, unused by nightly build)'
+        description: 'When provided this will generate a discussion of the specified category, e.g. Announcements. (unused by nightly build)'
         type: string
         required: false
         default: ''
@@ -214,7 +219,7 @@ jobs:
           body: |
             ${{ needs.tag.outputs.changelog }}
           discussionCategory: ${{ github.event.inputs.discussionCategory }}
-          draft: false
+          draft: ${{ github.event.inputs.draft }}
           generateReleaseNotes: false
           makeLatest: ${{ github.event.inputs.makeLatest }}
           name: ${{ needs.tag.outputs.latestTag }}
