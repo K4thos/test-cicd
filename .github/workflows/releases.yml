@@ -77,16 +77,23 @@ jobs:
             bin: Ikemen_GO.exe
             #cc: x86_64-w64-mingw32-gcc
             #ccx: x86_64-w64-mingw32-g++
+            glibc: ''
           - runner_os: linux
-            os: ubuntu-22.04
+            os: ubuntu-20.04 # ubuntu-22.04 / ubuntu-18.04 (deprecated)
             goos: linux
             goarch: amd64
             bin: Ikemen_GO_Linux
+            #cc:
+            #ccx:
+            glibc: '2.13'
           - runner_os: macos
-            os: macos-11
+            os: macos-11 # macos-10.15 (deprecated)
             goos: darwin
             goarch: amd64
             bin: Ikemen_GO_MacOS
+            #cc:
+            #ccx:
+            glibc: ''
     runs-on: ${{ matrix.cfg.os }}
     steps:
       - uses: actions/checkout@v3
@@ -103,16 +110,27 @@ jobs:
           if [ "$RUNNER_OS" == "Linux" ]; then
             sudo apt-get update && sudo apt-get install -y libasound2-dev libgl1-mesa-dev xorg-dev libgtk-3-dev
           fi
+          if [ "{{ matrix.cfg.glibc }}" != "" ]; then
+            wget https://raw.githubusercontent.com/wheybags/glibc_version_header/master/version_headers/x64/force_link_glibc_{{ matrix.cfg.glibc }}.h
+            echo "cgo_cflags=$CGO_CFLAGS -include ./force_link_glibc_{{ matrix.cfg.glibc }}.h" >> $GITHUB_ENV
+            echo "cgo_cxxflags=$CGO_CXXFLAGS -include ./force_link_glibc_{{ matrix.cfg.glibc }}.h" >> $GITHUB_ENV
+          else
+            echo "cgo_cflags=$CGO_CFLAGS >> $GITHUB_ENV
+            echo "cgo_cxxflags=$CGO_CXXFLAGS >> $GITHUB_ENV
+          fi
         shell: bash
 
       - name: Build
         run: |
+          echo "CGO_CFLAGS: $CGO_CFLAGS"
+          echo "CGO_CXXFLAGS: $CGO_CXXFLAGS"
           go env -w GO111MODULE=on
           go mod download
           if [ "$RUNNER_OS" == "Windows" ]; then
             go build -v -ldflags "-H windowsgui" -o ./${{ matrix.cfg.bin }} ./src
           else
             go build -v -o ./${{ matrix.cfg.bin }} ./src
+            chmod +x ${{ matrix.cfg.bin }}
           fi
         shell: bash
         env:
@@ -121,7 +139,8 @@ jobs:
           GOARCH: ${{ matrix.cfg.goarch }}
           #CC: ${{ matrix.cfg.cc }}
           #CCX: ${{ matrix.cfg.cxx }}
-
+          CGO_CFLAGS: "${{ env.cgo_cflags }}"
+          CGO_CXXFLAGS: "${{ env.cgo_cxxflags }}"
       - name: Prepare artifacts
         id: artifacts
         run: |
