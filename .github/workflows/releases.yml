@@ -4,22 +4,22 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Tag for the new release. Leave empty to only update nightly build. 
+        description: 'Tag for the new release. Leave empty to only update nightly build.'
         type: string
         required: false
         default: ''
       prerelease:
-        description: Set as a pre-release. (default: false, unused by nightly build)
+        description: 'Set as a pre-release. (default: false, unused by nightly build)'
         type: boolean
         required: false
         default: false
       makeLatest:
-        description: Set as the latest release. (default: true, unused by nightly build)
+        description: 'Set as the latest release. (default: true, unused by nightly build)'
         type: boolean
         required: false
         default: true
       discussionCategory:
-        description: Set as the latest release, e.g. Announcements. (default: empty, no discussion, unused by nightly build)
+        description: 'Set as the latest release, e.g. Announcements. (default: empty, no discussion, unused by nightly build)'
         type: string
         required: false
         default: ''
