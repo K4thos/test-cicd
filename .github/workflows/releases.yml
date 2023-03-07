@@ -115,9 +115,9 @@ jobs:
       - name: Build
         run: |
           if [ "${{ matrix.cfg.glibc }}" != "" ]; then
-            wget https://raw.githubusercontent.com/wheybags/glibc_version_header/master/version_headers/x64/force_link_glibc_${{ matrix.cfg.glibc }}.h
-            CGO_CFLAGS="$CGO_CFLAGS -include $PWD/force_link_glibc_${{ matrix.cfg.glibc }}.h"
-            CGO_CXXFLAGS="$CGO_CXXFLAGS -include $PWD/force_link_glibc_${{ matrix.cfg.glibc }}.h"
+            wget https://raw.githubusercontent.com/wheybags/glibc_version_header/master/version_headers/x64/force_link_glibc_${{ matrix.cfg.glibc }}.h -O $PWD/force_link_glibc.h
+            CGO_CFLAGS="$CGO_CFLAGS -include $PWD/force_link_glibc.h"
+            CGO_CXXFLAGS="$CGO_CXXFLAGS -include $PWD/force_link_glibc.h"
             echo "CGO_CFLAGS: $CGO_CFLAGS"
             echo "CGO_CXXFLAGS: $CGO_CXXFLAGS"
           fi
