@@ -9,10 +9,20 @@ on:
         required: false
         default: ''
       prerelease:
-        description: Select to flag the new release as a pre-release.
+        description: Set as a pre-release. (default: false, unused by nightly build)
         type: boolean
         required: false
         default: false
+      makeLatest:
+        description: Set as the latest release. (default: true, unused by nightly build)
+        type: boolean
+        required: false
+        default: true
+      discussionCategory:
+        description: Set as the latest release, e.g. Announcements. (default: empty, no discussion, unused by nightly build)
+        type: string
+        required: false
+        default: ''
 
 permissions:
   checks: write
@@ -93,7 +103,7 @@ jobs:
             bin: Ikemen_GO_MacOS
             #cc:
             #ccx:
-            glibc: ''
+            glibc: '2.13'
     runs-on: ${{ matrix.cfg.os }}
     steps:
       - uses: actions/checkout@v3
@@ -203,10 +213,10 @@ jobs:
           artifacts: "${{ steps.artifacts.outputs.artifact }}"
           body: |
             ${{ needs.tag.outputs.changelog }}
-          discussionCategory: ""
+          discussionCategory: ${{ github.event.inputs.discussionCategory }}
           draft: false
           generateReleaseNotes: false
-          makeLatest: true
+          makeLatest: ${{ github.event.inputs.makeLatest }}
           name: ${{ needs.tag.outputs.latestTag }}
           omitBody: false
           omitBodyDuringUpdate: false
