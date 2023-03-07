@@ -14,7 +14,7 @@ on:
         required: false
         default: false
       makeLatest:
-        description: 'Set as the latest release. (unused by nightly build)'
+        description: 'Set as the latest release. (unused by the nightly build)'
         type: boolean
         required: false
         default: true
@@ -24,7 +24,7 @@ on:
         required: false
         default: false
       discussionCategory:
-        description: 'When provided this will generate a discussion of the specified category, e.g. Announcements. (unused by nightly build)'
+        description: 'When provided this will generate a discussion of the specified category, e.g. Announcements. (unused by the nightly build)'
         type: string
         required: false
         default: ''
@@ -98,16 +98,16 @@ jobs:
             goos: linux
             goarch: amd64
             bin: Ikemen_GO_Linux
-            #cc:
-            #ccx:
+            #cc: gcc
+            #ccx: g++
             glibc: '2.13'
           - runner_os: macos
             os: macos-11 # macos-10.15 (deprecated)
             goos: darwin
             goarch: amd64
             bin: Ikemen_GO_MacOS
-            #cc:
-            #ccx:
+            #cc: o64-clang
+            #ccx: o64-clang++
             glibc: '2.13'
     runs-on: ${{ matrix.cfg.os }}
     steps:
@@ -127,6 +127,31 @@ jobs:
           fi
         shell: bash
 
+      - name: Make syso
+        if: "${{ matrix.cfg.runner_os == 'windows' }}"
+        run: >
+          echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+          <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+          <assemblyIdentity
+              version="${{ github.event.inputs.tag }}"
+              processorArchitecture="amd64"
+              name="controls"
+              type="win32"
+          />
+          <dependency>
+          <dependentAssembly>
+          <assemblyIdentity
+              type="win32"
+              name="Suehiro.Mugen.Ikemen_GO"
+              version="${{ github.event.inputs.tag }}"
+              processorArchitecture="amd64"
+              language="golang"
+          />
+          </dependentAssembly>
+          </dependency>
+          </assembly>' > ./windres/Ikemen_GO.exe.manifest
+        shell: bash
+
       - name: Build
         run: |
           if [ "${{ matrix.cfg.glibc }}" != "" ]; then
@@ -139,7 +164,12 @@ jobs:
           go env -w GO111MODULE=on
           go mod download
           if [ "$RUNNER_OS" == "Windows" ]; then
+            cd windres
+            windres -o ikemen_go.syso Ikemen_GO.rc
+            cd ..
+            cp 'windres/ikemen_go.syso' './src/'
             go build -v -ldflags "-H windowsgui" -o ./${{ matrix.cfg.bin }} ./src
+            rm './src/ikemen_go.syso'
           else
             go build -v -o ./${{ matrix.cfg.bin }} ./src
             chmod +x ${{ matrix.cfg.bin }}
