@@ -110,20 +110,17 @@ jobs:
           if [ "$RUNNER_OS" == "Linux" ]; then
             sudo apt-get update && sudo apt-get install -y libasound2-dev libgl1-mesa-dev xorg-dev libgtk-3-dev
           fi
-          if [ "${{ matrix.cfg.glibc }}" != "" ]; then
-            wget https://raw.githubusercontent.com/wheybags/glibc_version_header/master/version_headers/x64/force_link_glibc_${{ matrix.cfg.glibc }}.h
-            echo "cgo_cflags=$CGO_CFLAGS -include $PWD/force_link_glibc_${{ matrix.cfg.glibc }}.h" >> $GITHUB_ENV
-            echo "cgo_cxxflags=$CGO_CXXFLAGS -include $PWD/force_link_glibc_${{ matrix.cfg.glibc }}.h" >> $GITHUB_ENV
-          else
-            echo "cgo_cflags=$CGO_CFLAGS >> $GITHUB_ENV
-            echo "cgo_cxxflags=$CGO_CXXFLAGS >> $GITHUB_ENV
-          fi
         shell: bash
 
       - name: Build
         run: |
-          echo "CGO_CFLAGS: $CGO_CFLAGS"
-          echo "CGO_CXXFLAGS: $CGO_CXXFLAGS"
+          if [ "${{ matrix.cfg.glibc }}" != "" ]; then
+            wget https://raw.githubusercontent.com/wheybags/glibc_version_header/master/version_headers/x64/force_link_glibc_${{ matrix.cfg.glibc }}.h -O $PWD/force_link_glibc.h
+            CGO_CFLAGS="$CGO_CFLAGS -include $PWD/force_link_glibc.h"
+            CGO_CXXFLAGS="$CGO_CXXFLAGS -include $PWD/force_link_glibc.h"
+            echo "CGO_CFLAGS: $CGO_CFLAGS"
+            echo "CGO_CXXFLAGS: $CGO_CXXFLAGS"
+          fi
           go env -w GO111MODULE=on
           go mod download
           if [ "$RUNNER_OS" == "Windows" ]; then
@@ -139,8 +136,6 @@ jobs:
           GOARCH: ${{ matrix.cfg.goarch }}
           #CC: ${{ matrix.cfg.cc }}
           #CCX: ${{ matrix.cfg.cxx }}
-          CGO_CFLAGS: "${{ env.cgo_cflags }}"
-          CGO_CXXFLAGS: "${{ env.cgo_cxxflags }}"
       - name: Prepare artifacts
         id: artifacts
         run: |
