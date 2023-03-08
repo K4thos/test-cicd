@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag for the new release. Leave empty to only update the nightly build.'
+        description: 'Tag for the new release. Use semantic versioning e.g. v1.0.0. Leave empty to only update the nightly build.'
         type: string
         required: false
         default: ''
@@ -39,6 +39,7 @@ jobs:
     name: prepare tag
     runs-on: ubuntu-latest
     outputs:
+      version: ${{ env.version }}
       previousTag: ${{ steps.previousTag.outputs.tag }}
       latestTag: ${{ steps.latestTag.outputs.new_tag }}
       changelog: ${{ steps.changelog.outputs.changes }}
@@ -65,6 +66,15 @@ jobs:
           # <keyword>:<release_type>:<changelog_section>
           # custom_release_rules: build:patch,chore:patch,docs:patch,feat:patch:Features,fix:patch:Bug Fixes,other:patch,perf:patch,refactor:patch,style:patch,test:patch
           # ${{ steps.latestTag.outputs.changelog }}
+
+      - name: Set version
+        run: |
+          if [ "${{ github.event.inputs.tag }}" != "" ]; then
+            echo "version=${{ steps.latestTag.outputs.new_tag }}" >> $GITHUB_ENV
+          else
+            echo "version=nightly" >> $GITHUB_ENV
+          fi
+        shell: bash
 
       - name: Update CHANGELOG
         if: "${{ github.event.inputs.tag != '' }}"
@@ -133,7 +143,7 @@ jobs:
           echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
           <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
           <assemblyIdentity
-              version="${{ github.event.inputs.tag }}"
+              version="${{ needs.tag.outputs.version }}"
               processorArchitecture="amd64"
               name="controls"
               type="win32"
@@ -143,7 +153,7 @@ jobs:
           <assemblyIdentity
               type="win32"
               name="Suehiro.Mugen.Ikemen_GO"
-              version="${{ github.event.inputs.tag }}"
+              version="${{ needs.tag.outputs.version }}"
               processorArchitecture="amd64"
               language="golang"
           />
@@ -165,13 +175,11 @@ jobs:
           go mod download
           if [ "$RUNNER_OS" == "Windows" ]; then
             cd windres
-            windres -o ikemen_go.syso Ikemen_GO.rc
+            windres -o ../src/ikemen_go.syso Ikemen_GO.rc
             cd ..
-            cp 'windres/ikemen_go.syso' './src/'
-            go build -v -ldflags "-H windowsgui" -o ./${{ matrix.cfg.bin }} ./src
-            rm './src/ikemen_go.syso'
+            go build -v -ldflags "-X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=$(date '+%Y-%m-%d')' -H windowsgui" -o ./${{ matrix.cfg.bin }} ./src
           else
-            go build -v -o ./${{ matrix.cfg.bin }} ./src
+            go build -v -ldflags "-X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=$(date '+%Y-%m-%d')' -o ./${{ matrix.cfg.bin }} ./src
             chmod +x ${{ matrix.cfg.bin }}
           fi
         shell: bash
