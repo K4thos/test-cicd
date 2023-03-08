@@ -181,7 +181,7 @@ jobs:
             cd ..
             go build -v -ldflags "-X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=${{ needs.tag.outputs.buildTime }}' -H windowsgui" -o ./${{ matrix.cfg.bin }} ./src
           else
-            go build -v -ldflags "-X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=${{ needs.tag.outputs.buildTime }}' -o ./${{ matrix.cfg.bin }} ./src
+            go build -v -ldflags "-X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=${{ needs.tag.outputs.buildTime }}'" -o ./${{ matrix.cfg.bin }} ./src
             chmod +x ${{ matrix.cfg.bin }}
           fi
         shell: bash
