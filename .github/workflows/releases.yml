@@ -175,7 +175,6 @@ jobs:
           fi
           go env -w GO111MODULE=on
           go mod download
-          
           if [ "$RUNNER_OS" == "Windows" ]; then
             cd windres
             windres -o ../src/ikemen_go.syso Ikemen_GO.rc
