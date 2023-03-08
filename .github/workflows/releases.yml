@@ -40,6 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ env.version }}
+      buildTime: ${{ env.buildTime }}
       previousTag: ${{ steps.previousTag.outputs.tag }}
       latestTag: ${{ steps.latestTag.outputs.new_tag }}
       changelog: ${{ steps.changelog.outputs.changes }}
@@ -74,6 +75,7 @@ jobs:
           else
             echo "version=nightly" >> $GITHUB_ENV
           fi
+          echo "buildTime=$(date '+%Y-%m-%d')" >> $GITHUB_ENV
         shell: bash
 
       - name: Update CHANGELOG
@@ -173,13 +175,14 @@ jobs:
           fi
           go env -w GO111MODULE=on
           go mod download
+          
           if [ "$RUNNER_OS" == "Windows" ]; then
             cd windres
             windres -o ../src/ikemen_go.syso Ikemen_GO.rc
             cd ..
-            go build -v -ldflags "-X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=$(date '+%Y-%m-%d')' -H windowsgui" -o ./${{ matrix.cfg.bin }} ./src
+            go build -v -ldflags "-X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=${{ needs.tag.outputs.buildTime }}' -H windowsgui" -o ./${{ matrix.cfg.bin }} ./src
           else
-            go build -v -ldflags "-X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=$(date '+%Y-%m-%d')' -o ./${{ matrix.cfg.bin }} ./src
+            go build -v -ldflags "-X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=${{ needs.tag.outputs.buildTime }}' -o ./${{ matrix.cfg.bin }} ./src
             chmod +x ${{ matrix.cfg.bin }}
           fi
         shell: bash
