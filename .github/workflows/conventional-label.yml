@@ -9,9 +9,7 @@ on:
       - reopened
       - synchronize
 
-permissions:
-  - read-all
-  - write-all
+permissions: write-all
 
 name: conventional-release-labels
 jobs:
