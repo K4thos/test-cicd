@@ -120,7 +120,7 @@ jobs:
             bin: Ikemen_GO_MacOS
             #cc: o64-clang
             #ccx: o64-clang++
-            glibc: '2.13'
+            glibc: ''
     runs-on: ${{ matrix.cfg.os }}
     steps:
       - uses: actions/checkout@v3
@@ -175,6 +175,8 @@ jobs:
             CGO_CFLAGS="$CGO_CFLAGS -mmacosx-version-min=10.13"
             CGO_CXXFLAGS="$CGO_CXXFLAGS -mmacosx-version-min=10.13"
             CGO_LDFLAGS="$CGO_LDFLAGS -mmacosx-version-min=10.13"
+            CC="o64-clang"
+            CCX="o64-clang++"
           fi
           echo "CGO_CFLAGS: $CGO_CFLAGS"
           echo "CGO_CXXFLAGS: $CGO_CXXFLAGS"
