@@ -8,6 +8,9 @@ on:
       - edited
       - reopened
       - synchronize
+
+permissions: read-all|write-all
+
 name: conventional-release-labels
 jobs:
   label:
