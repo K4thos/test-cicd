@@ -3,9 +3,8 @@ on:
   pull_request_target:
     branches: [ master, main ]
 
-permissions:
-  checks: write
-  contents: write
+permissions: write-all
+
 
 name: lint-code-style
 jobs:
