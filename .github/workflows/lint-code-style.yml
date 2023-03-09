@@ -5,6 +5,7 @@ on:
 
 permissions: write-all
 
+
 name: lint-code-style
 jobs:
   lint-code-style:
