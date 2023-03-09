@@ -3,7 +3,9 @@ on:
     branches: [ master, main ]
     types: [ opened, edited, reopened, synchronize ]
 
-permissions: read-all|write-all
+permissions:
+  - read-all
+  - write-all
 
 name: conventional-title
 jobs:
