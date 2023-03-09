@@ -120,7 +120,7 @@ jobs:
             bin: Ikemen_GO_MacOS
             #cc: o64-clang
             #ccx: o64-clang++
-            glibc: '2.13'
+            glibc: ''
     runs-on: ${{ matrix.cfg.os }}
     steps:
       - uses: actions/checkout@v3
@@ -172,6 +172,10 @@ jobs:
             CGO_CXXFLAGS="$CGO_CXXFLAGS -include $PWD/force_link_glibc.h"
             echo "CGO_CFLAGS: $CGO_CFLAGS"
             echo "CGO_CXXFLAGS: $CGO_CXXFLAGS"
+          fi
+          if [ "$RUNNER_OS" == "macOS" ]; then
+            CGO_CFLAGS="$CGO_CFLAGS -mmacosx-version-min=10.7"
+            CGO_LDFLAGS="$CGO_LDFLAGS -mmacosx-version-min=10.7"
           fi
           go env -w GO111MODULE=on
           go mod download
