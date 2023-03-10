@@ -72,8 +72,6 @@ jobs:
             goos: windows
             goarch: amd64
             bin: Ikemen_GO.exe
-            cc: x86_64-w64-mingw32-gcc
-            ccx: x86_64-w64-mingw32-g++
             glibc: ''
             target: ''
           - runner_os: linux
@@ -81,8 +79,6 @@ jobs:
             goos: linux
             goarch: amd64
             bin: Ikemen_GO_Linux
-            cc: gcc
-            ccx: g++
             glibc: '2.13'
             target: ''
           - runner_os: macos
@@ -90,10 +86,8 @@ jobs:
             goos: darwin
             goarch: amd64
             bin: Ikemen_GO_MacOS
-            cc: o64-clang
-            ccx: o64-clang++
             glibc: ''
-            target: '10.13'
+            target: '10.7'
     runs-on: ${{ matrix.cfg.os }}
     steps:
       - uses: actions/checkout@v3
@@ -116,8 +110,6 @@ jobs:
         run: |
           export GOOS="${{ matrix.cfg.goos }}"
           export GOARCH="${{ matrix.cfg.goarch }}"
-          export CC="${{ matrix.cfg.cc }}"
-          export CCX="${{ matrix.cfg.ccx }}"
           export CGO_ENABLED=1
           export LDFLAGS="$LDFLAGS -X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=${{ needs.tag.outputs.buildTime }}'"
           if [ "${{ matrix.cfg.glibc }}" != "" ]; then
