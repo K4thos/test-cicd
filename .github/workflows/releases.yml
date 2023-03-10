@@ -123,7 +123,7 @@ jobs:
             export CGO_CFLAGS="$CGO_CFLAGS -mmacosx-version-min=${{ matrix.cfg.target }}"
             export CGO_CXXFLAGS="$CGO_CXXFLAGS -mmacosx-version-min=${{ matrix.cfg.target }}"
           elif [ "$RUNNER_OS" == "Windows" ]; then
-            export LDFLAGS="$CGO_LDFLAGS -H windowsgui"
+            export LDFLAGS="$LDFLAGS -H windowsgui"
             cd windres
             windres -o ../src/ikemen_go.syso Ikemen_GO.rc
             cd ..
