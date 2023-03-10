@@ -1,4 +1,4 @@
-#version 400
+#version 120
 precision highp float;
 
 uniform mat4 modelview, projection;
