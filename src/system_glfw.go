@@ -37,7 +37,7 @@ func (s *System) newWindow(w, h int) (*Window, error) {
 	fullscreen := s.fullscreen && !forceWindowed
 
 	glfw.WindowHint(glfw.Resizable, glfw.False)
-	glfw.WindowHint(glfw.ContextVersionMajor, 4)
+	glfw.WindowHint(glfw.ContextVersionMajor, 2)
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
 
 	// Create main window.
