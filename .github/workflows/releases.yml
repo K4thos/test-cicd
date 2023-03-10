@@ -111,24 +111,24 @@ jobs:
           export GOOS="${{ matrix.cfg.goos }}"
           export GOARCH="${{ matrix.cfg.goarch }}"
           export CGO_ENABLED=1
-          export LDFLAGS="$LDFLAGS -X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=${{ needs.tag.outputs.buildTime }}'"
+          export GO_LDFLAGS="$GO_LDFLAGS -X 'main.Version=${{ needs.tag.outputs.version }}' -X 'main.BuildTime=${{ needs.tag.outputs.buildTime }}'"
           if [ "${{ matrix.cfg.glibc }}" != "" ]; then
             wget https://raw.githubusercontent.com/wheybags/glibc_version_header/master/version_headers/x64/force_link_glibc_${{ matrix.cfg.glibc }}.h -O $PWD/force_link_glibc.h
             export CGO_CFLAGS="$CGO_CFLAGS -include $PWD/force_link_glibc.h"
             export CGO_CXXFLAGS="$CGO_CXXFLAGS -include $PWD/force_link_glibc.h"
           fi
           if [ "$RUNNER_OS" == "macOS" ]; then
-            export LDFLAGS="$LDFLAGS -mmacosx-version-min=${{ matrix.cfg.target }}"
+            export GO_LDFLAGS="$GO_LDFLAGS -mmacosx-version-min=${{ matrix.cfg.target }}"
             export CGO_LDFLAGS="$CGO_LDFLAGS -mmacosx-version-min=${{ matrix.cfg.target }}"
             export CGO_CFLAGS="$CGO_CFLAGS -mmacosx-version-min=${{ matrix.cfg.target }}"
             export CGO_CXXFLAGS="$CGO_CXXFLAGS -mmacosx-version-min=${{ matrix.cfg.target }}"
           elif [ "$RUNNER_OS" == "Windows" ]; then
-            export LDFLAGS="$LDFLAGS -H windowsgui"
+            export GO_LDFLAGS="$GO_LDFLAGS -H windowsgui"
             cd windres
             windres -o ../src/ikemen_go.syso Ikemen_GO.rc
             cd ..
           fi
-          echo "LDFLAGS: $LDFLAGS"
+          echo "GO_LDFLAGS: $GO_LDFLAGS"
           echo "CGO_LDFLAGS: $CGO_LDFLAGS"
           echo "CGO_CFLAGS: $CGO_CFLAGS"
           echo "CGO_CXXFLAGS: $CGO_CXXFLAGS"
