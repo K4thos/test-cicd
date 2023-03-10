@@ -1,8 +1,11 @@
-name: Changelog
 on:
   release:
     types:
       - created
+
+permissions: write-all
+
+name: changelog
 jobs:
   changelog:
     runs-on: ubuntu-20.04
@@ -10,4 +13,4 @@ jobs:
       - name: "✏️ Generate release changelog"
         uses: heinrichreimer/action-github-changelog-generator@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }} 
+          token: ${{ secrets.IKEMEN_TOKEN }} 
