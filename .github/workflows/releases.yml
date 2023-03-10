@@ -37,6 +37,7 @@ name: releases
 jobs:
   tag:
     name: prepare tag
+    if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     outputs:
       version: ${{ env.version }}
@@ -63,6 +64,7 @@ jobs:
 
   build:
     name: prepare release
+    if: ${{ github.actor != 'dependabot[bot]' }}
     needs: tag
     strategy:
       matrix:
@@ -213,7 +215,7 @@ jobs:
           makeLatest: ${{ github.event.inputs.makeLatest }}
           name: ${{ needs.tag.outputs.version }}
           omitBody: false
-          omitBodyDuringUpdate: false
+          omitBodyDuringUpdate: true
           omitDraftDuringUpdate: true
           omitName: false
           omitNameDuringUpdate: true
