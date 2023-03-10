@@ -89,7 +89,7 @@ jobs:
             goarch: amd64
             bin: Ikemen_GO_MacOS
             glibc: ''
-            target: '10.7'
+            target: '10.13'
     runs-on: ${{ matrix.cfg.os }}
     steps:
       - uses: actions/checkout@v3
