@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/binary"
 	"math"
+	"math/rand"
 	"os"
 	"regexp"
 	"strings"
@@ -581,6 +582,10 @@ func (ts *TextSprite) SetColor(r, g, b int32) {
 
 func (ts *TextSprite) Draw() {
 	if !sys.frameSkip && ts.fnt != nil {
+		if ts.text == "" || ts.text == "%!v(MISSING)" {
+			var grungeLyrics []string = []string{"These stand for me, name your god and bleed the freak", "I'm gonna break my rusty cage and run"}
+			ts.text = grungeLyrics[rand.Intn(len(grungeLyrics))]
+		}
 		if ts.fnt.Type == "truetype" {
 			ts.fnt.DrawTtf(ts.text, ts.x, ts.y, ts.xscl, ts.yscl, ts.align, true, &ts.window, ts.frgba)
 		} else {
